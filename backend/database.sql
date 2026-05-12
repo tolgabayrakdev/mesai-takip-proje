@@ -23,7 +23,7 @@ CREATE TABLE users (
   full_name    VARCHAR(100) NOT NULL,
   email        VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  role         user_role NOT NULL DEFAULT 'employee',
+  role         user_role NOT NULL DEFAULT 'personel',
   is_active    BOOLEAN NOT NULL DEFAULT TRUE,
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

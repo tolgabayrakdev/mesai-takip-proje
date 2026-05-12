@@ -7,7 +7,7 @@ export function authenticate(req, res, next) {
     const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
     if (!token) throw new UnauthorizedException('No token provided');
 
-    req.user = validateToken(token, config.jwtSecret);
+    req.user = validateToken(token);
     next();
   } catch (err) {
     if (err instanceof UnauthorizedException) return next(err);
