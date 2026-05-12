@@ -1,17 +1,22 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router";
+import { API_URL } from "@/lib/config";
 
 interface AuthProviderProps {
   children: ReactNode;
+  role?: "personel" | "yonetici";
 }
 
-export default function AuthProvider({ children }: AuthProviderProps) {
+export default function AuthProvider({ children, role }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ role: string } | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/me", { credentials: "include" })
-      .then((res) => setIsAuthenticated(res.ok))
+    fetch(`${API_URL}/auth/me`, { credentials: "include" })
+      .then(async (res) => {
+        if (res.ok) setUser(await res.json());
+        else setUser(null);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -23,7 +28,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     );
   }
 
-  if (!isAuthenticated) return <Navigate to="/sign-in" replace />;
+  if (!user) return <Navigate to="/sign-in" replace />;
+
+  if (role && user.role !== role) {
+    return <Navigate to={user.role === "yonetici" ? "/admin" : "/dashboard"} replace />;
+  }
 
   return <>{children}</>;
 }
