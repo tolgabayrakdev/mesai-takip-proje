@@ -24,6 +24,15 @@ export class AuthController {
     }
   };
 
+  getMe = async (req, res, next) => {
+    try {
+      const user = await this.authService.getMe(req.user.id);
+      res.json(user);
+    } catch (err) {
+      next(err);
+    }
+  };
+
   logout = (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Çıkış yapıldı' });

@@ -8,6 +8,10 @@ export class AuthService {
     this.userRepository = new UserRepository();
   }
 
+  async getMe(id) {
+    return this.userRepository.findById(id);
+  }
+
   async login(email, password) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new UnauthorizedException('Email veya şifre hatalı');
