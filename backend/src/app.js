@@ -6,6 +6,9 @@ import cookieParser from "cookie-parser";
 import errorHandler from './middleware/errorHandler.js';
 
 import { config } from "./config/environment.js"
+import authRoutes from './routes/auth.routes.js';
+import shiftRoutes from './routes/shift.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
 const app = express();
 
@@ -22,11 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
 // Routes
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+app.use('/api/auth', authRoutes);
+app.use('/api/shift', shiftRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(errorHandler);
 

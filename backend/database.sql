@@ -1,6 +1,6 @@
 -- YebSoft Mesai Takip Sistemi - Database Schema
 
--- Enum types
+-- Enum tipleri
 CREATE TYPE user_role AS ENUM ('personel', 'yonetici');
 
 CREATE TYPE employee_status AS ENUM (
@@ -17,7 +17,7 @@ CREATE TYPE event_type AS ENUM (
   'mesai_bitir'
 );
 
--- Users table
+-- Kullanıcılar tablosu
 CREATE TABLE users (
   id           SERIAL PRIMARY KEY,
   full_name    VARCHAR(100) NOT NULL,
@@ -28,8 +28,8 @@ CREATE TABLE users (
   created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Daily work sessions table
--- Each employee can have at most 1 session per day
+-- Günlük mesai oturumları tablosu
+-- Her personel bir günde en fazla 1 oturum açabilir
 CREATE TABLE work_sessions (
   id              SERIAL PRIMARY KEY,
   user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -43,7 +43,7 @@ CREATE TABLE work_sessions (
   CONSTRAINT unique_session_per_day UNIQUE (user_id, date)
 );
 
--- Event history table
+-- Hareket geçmişi tablosu
 CREATE TABLE events (
   id           SERIAL PRIMARY KEY,
   session_id   INTEGER NOT NULL REFERENCES work_sessions(id) ON DELETE CASCADE,
@@ -52,7 +52,7 @@ CREATE TABLE events (
   occurred_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Indexes
+-- İndeksler
 CREATE INDEX idx_work_sessions_user ON work_sessions(user_id);
 CREATE INDEX idx_work_sessions_date ON work_sessions(date);
 CREATE INDEX idx_events_session ON events(session_id);
