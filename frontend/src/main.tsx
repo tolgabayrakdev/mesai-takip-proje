@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router";
 import { ThemeProvider } from "./components/theme-provider";
-import DashboardLayout from "./layouts/dashboard-layout";
+import PersonelLayout from "./layouts/personel-layout";
+import AdminLayout from "./layouts/admin-layout";
 import SignIn from "./pages/auth/sign-in";
 import DashboardIndex from "./pages/dashboard/index";
 import AdminIndex from "./pages/admin/index";
@@ -21,12 +22,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout role="personel" />,
+    element: <PersonelLayout />,
     children: [{ index: true, element: <DashboardIndex /> }],
   },
   {
     path: "/admin",
-    element: <DashboardLayout role="yonetici" />,
+    element: <AdminLayout />,
     children: [
       { index: true, element: <AdminIndex /> },
       { path: "employees/:id/history", element: <AdminHistory /> },

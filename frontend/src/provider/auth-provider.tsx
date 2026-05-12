@@ -29,7 +29,7 @@ export default function AuthProvider({ children, role }: AuthProviderProps) {
   }
 
   if (!user) return <Navigate to="/sign-in" replace />;
-
+  // Eğer role belirtilmişse ve kullanıcının rolü belirtilen role eşit değilse, kullanıcıyı kendi dashboard'una yönlendirelim.
   if (role && user.role !== role) {
     return <Navigate to={user.role === "yonetici" ? "/admin" : "/dashboard"} replace />;
   }

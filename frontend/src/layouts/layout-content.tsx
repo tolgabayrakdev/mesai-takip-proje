@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
-import AuthProvider from "@/provider/auth-provider";
 import { AppSidebar, type SidebarUser } from "@/components/app-sidebar";
 import { API_URL } from "@/lib/config";
 import {
@@ -14,19 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-interface DashboardLayoutProps {
-  role: "personel" | "yonetici";
-}
-
-export default function DashboardLayout({ role }: DashboardLayoutProps) {
-  return (
-    <AuthProvider role={role}>
-      <LayoutContent />
-    </AuthProvider>
-  );
-}
-
-function LayoutContent() {
+export default function LayoutContent() {
   const navigate = useNavigate();
   const [user, setUser] = useState<SidebarUser | null>(null);
   const [logoutOpen, setLogoutOpen] = useState(false);
