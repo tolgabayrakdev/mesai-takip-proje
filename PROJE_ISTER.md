@@ -42,6 +42,7 @@ Temel İş Kuralları
 • Mesaisini bitiren personel aynı gün tekrar işlem yapamamalıdır.
 • Personel yalnızca kendi kayıtlarını görüntüleyebilmelidir.
 • Yönetici tüm personelleri görüntüleyebilmelidir.
+
 Teknik Beklentiler
 • Responsive tasarım
 • Temiz ve okunabilir kod yapısı
@@ -49,6 +50,7 @@ Teknik Beklentiler
 • Form validation işlemleri
 • Temel güvenlik önlemleri
 Kullanılacak teknoloji tamamen geliştiriciye bırakılmıştır.
+
 Bonus Özellikler (Opsiyonel)
 Aşağıdaki geliştirmeler ekstra değerlendirme kapsamında artı puan sağlayacaktır:
 • QR ile mesai işlemleri
