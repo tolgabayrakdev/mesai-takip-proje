@@ -32,16 +32,17 @@ Sistemde aşağıdaki temel durumlar bulunmalıdır:
 Minimum Sayfalar
 
 Projede minimum olarak aşağıdaki ekranların bulunması beklenmektedir:
-• Login ekranı
-• Personel paneli
-• Yönetici dashboard ekranı
-• Hareket geçmişi ekranı
+• Login ekranı [x]
+• Personel paneli [x]
+• Yönetici dashboard ekranı [x]
+• Hareket geçmişi ekranı [x]
+
 Temel İş Kuralları
-• Personel mesai başlatmadan molaya çıkamamalıdır.
-• Molaya çıkan personel, moladan dönmeden mesaiyi bitirememelidir.
-• Mesaisini bitiren personel aynı gün tekrar işlem yapamamalıdır.
-• Personel yalnızca kendi kayıtlarını görüntüleyebilmelidir.
-• Yönetici tüm personelleri görüntüleyebilmelidir.
+• Personel mesai başlatmadan molaya çıkamamalıdır. [x]
+• Molaya çıkan personel, moladan dönmeden mesaiyi bitirememelidir. [x]
+• Mesaisini bitiren personel aynı gün tekrar işlem yapamamalıdır. [x]
+• Personel yalnızca kendi kayıtlarını görüntüleyebilmelidir. [x]
+• Yönetici tüm personelleri görüntüleyebilmelidir. [x]
 
 Teknik Beklentiler
 • Responsive tasarım

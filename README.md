@@ -302,3 +302,7 @@ cd frontend && npm run dev
 ```
 
 Frontend varsayılan olarak `http://localhost:5173` adresinde, backend `http://localhost:5000` adresinde çalışır.
+
+Frontend de proxy server çalışmaktadır. Yönlendirme için(IOS CİHAZLAR VS. İçin Eklenmiştir)
+
+@tolgabayrakdev
