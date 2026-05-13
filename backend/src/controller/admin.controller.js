@@ -14,6 +14,17 @@ export class AdminController {
     }
   };
 
+  getEmployee = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const employee = await this.adminService.getEmployee(Number(id));
+      if (!employee) return res.status(404).json({ message: 'Personel bulunamadı' });
+      res.json(employee);
+    } catch (err) {
+      next(err);
+    }
+  };
+
   getEmployeeHistory = async (req, res, next) => {
     try {
       const { id } = req.params;

@@ -16,12 +16,28 @@ export class AdminService {
     const sessionMap = {};
     todaySessions.forEach((s) => { sessionMap[s.user_id] = s; });
 
-    return users.map((u) => ({
-      ...u,
-      todayStatus: sessionMap[u.id]?.status || 'mesaiye_baslamadi',
-      startedAt: sessionMap[u.id]?.started_at || null,
-      totalBreakMinutes: sessionMap[u.id]?.total_break_minutes || 0,
+    const result = await Promise.all(users.map(async (u) => {
+      const session = sessionMap[u.id];
+      let currentBreakMinutes = 0;
+      if (session?.status === 'molada') {
+        const lastBreakStart = await this.eventRepository.findLastEvent(session.id, 'mola_baslat');
+        if (lastBreakStart) {
+          currentBreakMinutes = Math.ceil((Date.now() - new Date(lastBreakStart.occurred_at).getTime()) / 60_000);
+        }
+      }
+      return {
+        ...u,
+        todayStatus: session?.status || 'mesaiye_baslamadi',
+        startedAt: session?.started_at || null,
+        totalBreakMinutes: (session?.total_break_minutes || 0) + currentBreakMinutes,
+      };
     }));
+
+    return result;
+  }
+
+  async getEmployee(userId) {
+    return this.userRepository.findById(userId);
   }
 
   async getEmployeeHistory(userId, period = 'daily') {

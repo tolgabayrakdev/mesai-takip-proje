@@ -33,7 +33,7 @@ export class ShiftService {
     if (session.status !== 'molada') throw new HttpException(400, 'Aktif bir mola bulunamadı');
 
     const lastBreakStart = await this.eventRepository.findLastEvent(session.id, 'mola_baslat');
-    const breakMinutes = Math.round(
+    const breakMinutes = Math.ceil(
       (Date.now() - new Date(lastBreakStart.occurred_at).getTime()) / 60_000
     );
 
@@ -56,6 +56,11 @@ export class ShiftService {
   }
 
   async getHistory(userId) {
-    return this.eventRepository.findTodayEvents(userId);
+    const events = await this.eventRepository.findTodayEvents(userId);
+    const session = await this.sessionRepository.findTodaySession(userId);
+    return {
+      events,
+      totalBreakMinutes: session?.total_break_minutes || 0,
+    };
   }
 }

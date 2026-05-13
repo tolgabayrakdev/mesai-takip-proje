@@ -9,6 +9,7 @@ const adminController = new AdminController();
 router.use(authenticate, authorize('yonetici'));
 
 router.get('/employees', adminController.getEmployeeList);
+router.get('/employees/:id', adminController.getEmployee);
 router.get('/employees/:id/history', adminController.getEmployeeHistory);
 
 export default router;
