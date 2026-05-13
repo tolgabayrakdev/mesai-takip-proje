@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Coffee, Play, Square, Timer, Clock } from "lucide-react";
 import { API_URL } from "@/lib/config";
 import { toast } from "sonner";
-import type { SidebarUser } from "@/components/app-sidebar";
+import type { User as SidebarUser } from "@/layouts/layout-content";
 
 type EventType = "mesai_baslat" | "mola_baslat" | "mola_bitis" | "mesai_bitir";
 type ShiftStatus = "mesaiye_baslamadi" | "mesaide" | "molada" | "mesai_bitti";

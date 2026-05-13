@@ -71,11 +71,18 @@ export default function AdminIndex() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  async function fetchEmployees() {
+    const res = await fetch(`${API_URL}/admin/employees`, { credentials: "include" });
+    if (!res.ok) return;
+    const data = await res.json();
+    setEmployees(data.filter((e: Employee & { role?: string }) => e.role !== "yonetici"));
+  }
+
   useEffect(() => {
-    fetch(`${API_URL}/admin/employees`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setEmployees(data.filter((e: Employee & { role?: string }) => e.role !== "yonetici")))
-      .finally(() => setLoading(false));
+    fetchEmployees().finally(() => setLoading(false));
+
+    const id = setInterval(fetchEmployees, 10_000);
+    return () => clearInterval(id);
   }, []);
 
   const counts = employees.reduce<Record<ShiftStatus, number>>(

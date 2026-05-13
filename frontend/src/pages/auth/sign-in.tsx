@@ -15,6 +15,12 @@ export default function SignIn() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (!email.trim()) return toast.error("E-posta adresi boş olamaz");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast.error("Geçerli bir e-posta adresi giriniz");
+    if (!password) return toast.error("Şifre boş olamaz");
+    if (password.length < 6) return toast.error("Şifre en az 6 karakter olmalıdır");
+
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
