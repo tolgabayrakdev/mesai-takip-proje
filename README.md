@@ -2,6 +2,13 @@
 
 Çalışanların günlük mesai başlatma, molaya çıkma ve mesai bitirme işlemlerini takip etmeye yarayan bir web uygulamasıdır. Yöneticiler tüm personelin anlık durumunu ve geçmiş mesai kayıtlarını görebilir.
 
+## Canlı Proje
+
+| | Link |
+|---|---|
+| Frontend | https://mindful-light-production-efd2.up.railway.app/ |
+| Backend API | https://mesai-takip-proje-production.up.railway.app/ |
+
 ---
 
 ## Özellikler
