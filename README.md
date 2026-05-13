@@ -13,7 +13,7 @@
 
 ## Mobil Ekran Görüntüleri
 
-| Personel Paneli (PWA) | Personel Paneli |
+| Personel Paneli | Personel Paneli |
 |:---:|:---:|
 | ![Personel Paneli PWA](proje-gorsel-mobil/Ekran%20Resmi%202026-05-13%20-%2013.13.22.png) | ![Personel Paneli](proje-gorsel-mobil/Ekran%20Resmi%202026-05-13%20-%2013.13.50.png) |
 
