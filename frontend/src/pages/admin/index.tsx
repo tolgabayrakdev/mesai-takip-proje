@@ -57,6 +57,7 @@ const STAT_LABELS: Record<ShiftStatus, string> = {
   mesaiye_baslamadi: "Başlamadı",
 };
 
+// ISO tarih stringini "HH:MM" formatına çevirir; null gelirse "—" döner
 function formatTime(iso: string | null) {
   if (!iso) return "—";
   return new Date(iso).toLocaleTimeString("tr-TR", {
@@ -70,6 +71,7 @@ export default function AdminIndex() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Tüm personeli API'den çeker; yönetici rolündeki kullanıcıları listeden çıkarır
   async function fetchEmployees() {
     const res = await fetch(`${API_URL}/admin/employees`, { credentials: "include" });
     if (!res.ok) return;
@@ -77,6 +79,7 @@ export default function AdminIndex() {
     setEmployees(data.filter((e: Employee & { role?: string }) => e.role !== "yonetici"));
   }
 
+  // Sayfa açılışında veriyi çeker, ardından 10 saniyede bir otomatik yeniler (canlı takip)
   useEffect(() => {
     fetchEmployees().finally(() => setLoading(false));
 
@@ -84,6 +87,7 @@ export default function AdminIndex() {
     return () => clearInterval(id);
   }, []);
 
+  // Her durum için kaç personel olduğunu sayar; istatistik kartlarında gösterilir
   const counts = employees.reduce<Record<ShiftStatus, number>>(
     (acc, e) => {
       acc[e.todayStatus]++;
@@ -92,6 +96,7 @@ export default function AdminIndex() {
     { mesaiye_baslamadi: 0, mesaide: 0, molada: 0, mesai_bitti: 0 }
   );
 
+  // Personeli duruma göre üç gruba ayırır: aktif (mesai/mola), tamamlamış, başlamamış
   const activeEmployees = employees.filter(
     (e) => e.todayStatus === "mesaide" || e.todayStatus === "molada"
   );

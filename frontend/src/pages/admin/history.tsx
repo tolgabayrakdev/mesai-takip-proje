@@ -44,11 +44,15 @@ const PERIODS: { key: Period; label: string; desc: string }[] = [
   { key: "monthly", label: "Aylık", desc: "Son 30 gün" },
 ];
 
+// ISO tarih stringini "HH:MM" formatına çevirir; null gelirse "—" döner
 function formatTime(iso: string | null) {
   if (!iso) return "—";
   return new Date(iso).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
 }
 
+// "YYYY-MM-DD" formatındaki tarihi okunabilir Türkçe metne çevirir.
+// Bugün/dün ise kısa etiket, aksi hâlde "Pazartesi, 12 Mayıs" gibi uzun format döner.
+// Saat bilgisi olmayan string'e T12:00:00 eklenir; böylece saat dilimi kayması önlenir.
 function formatDate(dateStr: string) {
   const d = new Date(dateStr + "T12:00:00");
   const today = new Date();
@@ -65,6 +69,9 @@ function formatDate(dateStr: string) {
   });
 }
 
+// Mesai başlangıcı ile bitişi arasındaki süreyi hesaplar, toplam mola süresini düşer.
+// Mesai henüz bitmemişse (session_ended null) veya net süre 0'ın altındaysa null döner.
+// Sonucu "Xs Ydk" veya "Ydk" formatında döner (örn: "7s 30dk", "45dk").
 function calcWorkMinutes(
   session_started: string,
   session_ended: string | null,
@@ -88,6 +95,7 @@ export default function AdminHistory() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Sayfa açıldığında personelin adını çeker; hata/yetkisiz durumda admin paneline yönlendirir
   useEffect(() => {
     fetch(`${API_URL}/admin/employees/${id}`, { credentials: "include" })
       .then((res) => {
@@ -98,6 +106,7 @@ export default function AdminHistory() {
       .catch(() => navigate("/admin"));
   }, [id, navigate]);
 
+  // Seçili periyot (günlük/haftalık/aylık) değiştiğinde geçmişi yeniden çeker
   useEffect(() => {
     fetch(`${API_URL}/admin/employees/${id}/history?period=${period}`, { credentials: "include" })
       .then((res) => res.json())
@@ -105,6 +114,8 @@ export default function AdminHistory() {
       .finally(() => setLoading(false));
   }, [id, period]);
 
+  // Kayıtları tarihe göre gruplar: { "2025-05-12": [entry, ...], ... }
+  // Her gün için olaylar en yeniden eskiye doğru sıralanır
   const grouped = history.reduce<Record<string, HistoryEntry[]>>((acc, e) => {
     const day = e.date.slice(0, 10);
     (acc[day] ??= []).push(e);

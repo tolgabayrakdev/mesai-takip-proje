@@ -79,6 +79,8 @@ const STATUS_CONFIG: Record<
   },
 };
 
+// Son olayın tipine bakarak anlık mesai durumunu hesaplar.
+// Olay listesi boşsa "mesaiye_baslamadi", son olay mesai_baslat/mola_bitis ise "mesaide" vb. döner.
 function deriveStatus(events: ShiftEvent[]): ShiftStatus {
   if (events.length === 0) return "mesaiye_baslamadi";
   const last = events[events.length - 1].event_type;
@@ -88,6 +90,7 @@ function deriveStatus(events: ShiftEvent[]): ShiftStatus {
   return "mesaiye_baslamadi";
 }
 
+// ISO tarih stringini "HH:MM" formatına çevirir
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("tr-TR", {
     hour: "2-digit",
@@ -95,6 +98,8 @@ function formatTime(iso: string) {
   });
 }
 
+// Milisaniye cinsinden geçen süreyi okunabilir metne çevirir.
+// 1 saatin altında "42dk 07sn", üstünde "2s 05dk" formatını kullanır.
 function formatElapsed(ms: number) {
   const h = Math.floor(ms / 3_600_000);
   const m = Math.floor((ms % 3_600_000) / 60_000);
@@ -103,6 +108,7 @@ function formatElapsed(ms: number) {
   return `${m}dk ${String(s).padStart(2, "0")}sn`;
 }
 
+// Oturum açmış personelin bugünkü olaylarını ve toplam mola süresini API'den çeker
 async function fetchHistory(): Promise<{ events: ShiftEvent[]; totalBreakMinutes: number } | null> {
   const res = await fetch(`${API_URL}/shift/history`, { credentials: "include" });
   if (!res.ok) return null;
@@ -118,6 +124,7 @@ export default function DashboardIndex() {
   const [now, setNow] = useState(new Date());
   const [qrOpen, setQrOpen] = useState(false);
 
+  // Canvas mount edildiğinde QR kodu /qr URL'ini işaret edecek şekilde çizer
   const qrCanvasRef = useCallback((canvas: HTMLCanvasElement | null) => {
     if (!canvas) return;
     QRCodeLib.toCanvas(canvas, `${window.location.origin}/qr`, { width: 220, margin: 2 });
@@ -141,6 +148,8 @@ export default function DashboardIndex() {
     });
   }, []);
 
+  // Mesai başlat/bitir, molaya çık/dön gibi aksiyonları API'ye gönderir.
+  // İşlem sonrası geçmişi yeniler ve uygun toast bildirimi gösterir; hata varsa toast.error basar.
   async function callShiftAction(endpoint: string) {
     setActionLoading(true);
     try {
@@ -171,6 +180,7 @@ export default function DashboardIndex() {
     }
   }
 
+  // Mesai başlangıç ve bitiş olaylarını bul; sayaç sadece aktif mesai/mola sırasında çalışır
   const shiftStartEvent = events.find((e) => e.event_type === "mesai_baslat");
   const shiftEndEvent = events.find((e) => e.event_type === "mesai_bitir");
   const elapsedMs =
