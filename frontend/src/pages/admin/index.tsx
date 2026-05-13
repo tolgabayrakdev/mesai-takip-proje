@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/lib/config";
-import { Clock, Coffee, Play, Square, User, ChevronRight } from "lucide-react";
+import { Clock, Coffee, Play, Square, User, ChevronRight, QrCode } from "lucide-react";
 
 type ShiftStatus =
   | "mesaiye_baslamadi"
@@ -106,11 +106,20 @@ export default function AdminIndex() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Yönetici Paneli</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Yönetici Paneli</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/admin/qr")}
+          className="flex items-center gap-2 rounded-xl border bg-card hover:bg-muted px-3.5 py-2 text-sm font-medium transition-colors shrink-0"
+        >
+          <QrCode className="h-4 w-4" />
+          QR Kod
+        </button>
       </div>
 
       {/* İstatistik kartları */}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -12,6 +12,8 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nextPath = searchParams.get("next");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +37,11 @@ export default function SignIn() {
       }
       const data = await res.json();
       toast.success("Giriş başarılı");
-      navigate(data.user.role === "yonetici" ? "/admin" : "/dashboard");
+      if (nextPath && data.user.role === "personel") {
+        navigate(nextPath);
+      } else {
+        navigate(data.user.role === "yonetici" ? "/admin" : "/dashboard");
+      }
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Giriş başarısız");
     } finally {

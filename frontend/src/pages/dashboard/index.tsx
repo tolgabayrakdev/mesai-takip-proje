@@ -1,11 +1,20 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coffee, Play, Square, Timer, Clock } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Coffee, Play, Square, Timer, Clock, QrCode } from "lucide-react";
 import { API_URL } from "@/lib/config";
 import { toast } from "sonner";
 import type { User as SidebarUser } from "@/layouts/layout-content";
+import QRCodeLib from "qrcode";
 
 type EventType = "mesai_baslat" | "mola_baslat" | "mola_bitis" | "mesai_bitir";
 type ShiftStatus = "mesaiye_baslamadi" | "mesaide" | "molada" | "mesai_bitti";
@@ -104,6 +113,12 @@ export default function DashboardIndex() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [now, setNow] = useState(new Date());
+  const [qrOpen, setQrOpen] = useState(false);
+
+  const qrCanvasRef = useCallback((canvas: HTMLCanvasElement | null) => {
+    if (!canvas) return;
+    QRCodeLib.toCanvas(canvas, `${window.location.origin}/qr`, { width: 220, margin: 2 });
+  }, []);
 
   const status = deriveStatus(events);
   const cfg = STATUS_CONFIG[status];
@@ -176,17 +191,37 @@ export default function DashboardIndex() {
           <p className="text-sm text-muted-foreground">Hoş geldiniz</p>
           <h1 className="text-2xl font-bold tracking-tight">{user.full_name}</h1>
         </div>
-        <div className="text-right">
-          <p className="text-2xl font-mono font-semibold tabular-nums">
-            {now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {now.toLocaleDateString("tr-TR", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            })}
-          </p>
+        <div className="flex items-start gap-3">
+          <div className="text-right">
+            <p className="text-2xl font-mono font-semibold tabular-nums">
+              {now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {now.toLocaleDateString("tr-TR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}
+            </p>
+          </div>
+          <Dialog open={qrOpen} onOpenChange={setQrOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon" className="h-9 w-9 shrink-0" title="QR ile işlem yap">
+                <QrCode className="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-xs">
+              <DialogHeader>
+                <DialogTitle>QR ile İşlem Yap</DialogTitle>
+                <DialogDescription>
+                  Kameranızla okutun — mesai işlem sayfası açılır.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-center rounded-xl bg-white p-3">
+                <canvas ref={qrCanvasRef} />
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

@@ -9,6 +9,8 @@ import SignIn from "./pages/auth/sign-in";
 import DashboardIndex from "./pages/dashboard/index";
 import AdminIndex from "./pages/admin/index";
 import AdminHistory from "./pages/admin/history";
+import AdminQrCode from "./pages/admin/qr-code";
+import QrScanPage from "./pages/qr/index";
 import { Toaster } from "@/components/ui/sonner";
 
 const router = createBrowserRouter([
@@ -31,7 +33,12 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminIndex /> },
       { path: "employees/:id/history", element: <AdminHistory /> },
+      { path: "qr", element: <AdminQrCode /> },
     ],
+  },
+  {
+    path: "/qr",
+    element: <QrScanPage />,
   },
 ]);
 
