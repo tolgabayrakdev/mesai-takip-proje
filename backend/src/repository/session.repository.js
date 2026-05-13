@@ -1,10 +1,10 @@
-import { pool } from '../config/db.js';
+import { pool } from "../config/db.js";
 
 export class SessionRepository {
   // Kullanıcının bugüne ait oturumunu getirir
   async findTodaySession(userId) {
     const { rows } = await pool.query(
-      'SELECT * FROM work_sessions WHERE user_id = $1 AND date = CURRENT_DATE',
+      "SELECT * FROM work_sessions WHERE user_id = $1 AND date = CURRENT_DATE",
       [userId]
     );
     return rows[0] || null;
@@ -24,7 +24,7 @@ export class SessionRepository {
   // Belirtilen oturumun durumunu günceller
   async updateSessionStatus(sessionId, status) {
     const { rows } = await pool.query(
-      'UPDATE work_sessions SET status = $1 WHERE id = $2 RETURNING *',
+      "UPDATE work_sessions SET status = $1 WHERE id = $2 RETURNING *",
       [status, sessionId]
     );
     return rows[0];
@@ -33,7 +33,7 @@ export class SessionRepository {
   // Oturumun toplam mola süresine verilen dakikayı ekler
   async addBreakMinutes(sessionId, minutes) {
     const { rows } = await pool.query(
-      'UPDATE work_sessions SET total_break_minutes = total_break_minutes + $1 WHERE id = $2 RETURNING *',
+      "UPDATE work_sessions SET total_break_minutes = total_break_minutes + $1 WHERE id = $2 RETURNING *",
       [minutes, sessionId]
     );
     return rows[0];

@@ -1,4 +1,4 @@
-import { AdminService } from '../service/admin.service.js';
+import { AdminService } from "../service/admin.service.js";
 
 export class AdminController {
   constructor() {
@@ -18,7 +18,7 @@ export class AdminController {
     try {
       const { id } = req.params;
       const employee = await this.adminService.getEmployee(Number(id));
-      if (!employee) return res.status(404).json({ message: 'Personel bulunamadı' });
+      if (!employee) return res.status(404).json({ message: "Personel bulunamadı" });
       res.json(employee);
     } catch (err) {
       next(err);
@@ -28,7 +28,7 @@ export class AdminController {
   getEmployeeHistory = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const { period = 'daily' } = req.query;
+      const { period = "daily" } = req.query;
       const events = await this.adminService.getEmployeeHistory(Number(id), period);
       res.json(events);
     } catch (err) {

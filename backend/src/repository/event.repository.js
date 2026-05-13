@@ -1,4 +1,4 @@
-import { pool } from '../config/db.js';
+import { pool } from "../config/db.js";
 
 export class EventRepository {
   // Oturuma yeni bir hareket kaydı ekler
@@ -40,9 +40,9 @@ export class EventRepository {
   // Kullanıcının belirtilen periyottaki (günlük/haftalık/aylık) hareket geçmişini getirir
   async findEventsByPeriod(userId, period) {
     const intervals = {
-      weekly:  `ws.date >= CURRENT_DATE - INTERVAL '7 days'`,
+      weekly: `ws.date >= CURRENT_DATE - INTERVAL '7 days'`,
       monthly: `ws.date >= CURRENT_DATE - INTERVAL '30 days'`,
-      daily:   `ws.date = CURRENT_DATE`,
+      daily: `ws.date = CURRENT_DATE`,
     };
     const dateFilter = intervals[period] ?? intervals.daily;
 

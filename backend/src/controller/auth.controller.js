@@ -1,5 +1,5 @@
-import { AuthService } from '../service/auth.service.js';
-import { config } from '../config/environment.js';
+import { AuthService } from "../service/auth.service.js";
+import { config } from "../config/environment.js";
 
 export class AuthController {
   constructor() {
@@ -11,10 +11,10 @@ export class AuthController {
       const { email, password } = req.body;
       const result = await this.authService.login(email, password);
 
-      res.cookie('token', result.token, {
+      res.cookie("token", result.token, {
         httpOnly: true,
         secure: config.isProduction,
-        sameSite: 'lax',
+        sameSite: "lax",
         maxAge: 3 * 60 * 60 * 1000,
       });
 
@@ -34,7 +34,7 @@ export class AuthController {
   };
 
   logout = (req, res) => {
-    res.clearCookie('token');
-    res.json({ message: 'Çıkış yapıldı' });
+    res.clearCookie("token");
+    res.json({ message: "Çıkış yapıldı" });
   };
 }

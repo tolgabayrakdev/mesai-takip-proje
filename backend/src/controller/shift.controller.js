@@ -1,4 +1,4 @@
-import { ShiftService } from '../service/shift.service.js';
+import { ShiftService } from "../service/shift.service.js";
 
 export class ShiftController {
   constructor() {
