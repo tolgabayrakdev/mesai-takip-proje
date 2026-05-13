@@ -12,7 +12,7 @@ import adminRoutes from "./routes/admin.routes.js";
 
 const app = express();
 
-// Nginx / reverse proxy arkasında çalışırken X-Forwarded-For başlığına güven
+//reverse proxy arkasında çalışırken X-Forwarded-For başlığı
 app.set("trust proxy", 1);
 
 // Middleware
