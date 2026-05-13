@@ -48,9 +48,7 @@ export function printShiftPdf({ fullName, date, events, totalBreakMinutes }: Pri
   });
 
   const netMinutes = calcNetMinutes(events, totalBreakMinutes);
-  const netStr = netMinutes !== null
-    ? `${Math.floor(netMinutes / 60)}s ${netMinutes % 60}dk`
-    : "-";
+  const netStr = netMinutes !== null ? `${Math.floor(netMinutes / 60)}s ${netMinutes % 60}dk` : "-";
 
   const rows = events
     .map(

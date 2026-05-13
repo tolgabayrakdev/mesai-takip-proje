@@ -38,19 +38,25 @@ function fmtTime(iso: string | null) {
 
 function fmtDate(dateStr: string) {
   return new Date(dateStr + "T12:00:00").toLocaleDateString("tr-TR", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 }
 
 function fmtDateShort(dateStr: string) {
   return new Date(dateStr + "T12:00:00").toLocaleDateString("tr-TR", {
-    day: "2-digit", month: "2-digit", year: "numeric",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   });
 }
 
 function calcNet(started: string, ended: string | null, breakMin: number): string {
   if (!ended) return "Devam ediyor";
-  const mins = Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
+  const mins =
+    Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
   if (mins <= 0) return "—";
   const h = Math.floor(mins / 60);
   const m = mins % 60;
@@ -59,7 +65,8 @@ function calcNet(started: string, ended: string | null, breakMin: number): strin
 
 function calcNetMinutes(started: string, ended: string | null, breakMin: number): number | null {
   if (!ended) return null;
-  const mins = Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
+  const mins =
+    Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
   return mins > 0 ? mins : null;
 }
 
@@ -75,30 +82,33 @@ function groupByDay(entries: HistoryEntry[]): [string, HistoryEntry[]][] {
 
 // ─── PDF Export ────────────────────────────────────────────────────────────────
 
-export function exportAdminPdf(
-  employeeName: string,
-  period: Period,
-  entries: HistoryEntry[],
-) {
+export function exportAdminPdf(employeeName: string, period: Period, entries: HistoryEntry[]) {
   const days = groupByDay(entries);
   const today = new Date().toLocaleDateString("tr-TR", {
-    day: "numeric", month: "long", year: "numeric",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 
-  const dayBlocks = days.map(([day, dayEntries]) => {
-    const first = dayEntries[0];
-    const net = calcNet(first.session_started, first.session_ended, first.total_break_minutes);
+  const dayBlocks = days
+    .map(([day, dayEntries]) => {
+      const first = dayEntries[0];
+      const net = calcNet(first.session_started, first.session_ended, first.total_break_minutes);
 
-    const eventRows = dayEntries.map((e) => `
+      const eventRows = dayEntries
+        .map(
+          (e) => `
       <tr>
         <td>
           <span class="dot" style="background:${EVENT_COLOR[e.event_type]}"></span>
           ${EVENT_LABELS[e.event_type]}
         </td>
         <td class="time">${fmtTime(e.occurred_at)}</td>
-      </tr>`).join("");
+      </tr>`
+        )
+        .join("");
 
-    return `
+      return `
     <div class="day-block">
       <div class="day-header">
         <div>
@@ -107,9 +117,11 @@ export function exportAdminPdf(
         </div>
         <div class="day-badges">
           ${first.session_ended ? `<span class="badge green">${net} çalışma</span>` : ""}
-          ${first.total_break_minutes > 0
-            ? `<span class="badge amber">${first.total_break_minutes} dk mola</span>`
-            : `<span class="badge gray">Mola yok</span>`}
+          ${
+            first.total_break_minutes > 0
+              ? `<span class="badge amber">${first.total_break_minutes} dk mola</span>`
+              : `<span class="badge gray">Mola yok</span>`
+          }
         </div>
       </div>
       <table>
@@ -117,12 +129,17 @@ export function exportAdminPdf(
         <tbody>${eventRows}</tbody>
       </table>
     </div>`;
-  }).join("");
+    })
+    .join("");
 
   // Özet istatistikler
   const completedDays = days.filter(([, de]) => de[0].session_ended !== null);
   const totalNetMins = completedDays.reduce((sum, [, de]) => {
-    const mins = calcNetMinutes(de[0].session_started, de[0].session_ended, de[0].total_break_minutes);
+    const mins = calcNetMinutes(
+      de[0].session_started,
+      de[0].session_ended,
+      de[0].total_break_minutes
+    );
     return sum + (mins ?? 0);
   }, 0);
   const totalBreakMins = days.reduce((sum, [, de]) => sum + de[0].total_break_minutes, 0);
@@ -207,11 +224,7 @@ export function exportAdminPdf(
 
 // ─── CSV Export ────────────────────────────────────────────────────────────────
 
-export function exportAdminCsv(
-  employeeName: string,
-  period: Period,
-  entries: HistoryEntry[],
-) {
+export function exportAdminCsv(employeeName: string, period: Period, entries: HistoryEntry[]) {
   const days = groupByDay(entries);
 
   const headers = [
@@ -227,9 +240,15 @@ export function exportAdminCsv(
 
   const rows = days.map(([day, dayEntries]) => {
     const first = dayEntries[0];
-    const netMins = calcNetMinutes(first.session_started, first.session_ended, first.total_break_minutes);
+    const netMins = calcNetMinutes(
+      first.session_started,
+      first.session_ended,
+      first.total_break_minutes
+    );
     const dayName = new Date(day + "T12:00:00").toLocaleDateString("tr-TR", { weekday: "long" });
-    const eventLog = dayEntries.map((e) => `${EVENT_LABELS[e.event_type]} (${fmtTime(e.occurred_at)})`).join(" | ");
+    const eventLog = dayEntries
+      .map((e) => `${EVENT_LABELS[e.event_type]} (${fmtTime(e.occurred_at)})`)
+      .join(" | ");
 
     return [
       fmtDateShort(day),
@@ -238,7 +257,9 @@ export function exportAdminCsv(
       fmtTime(first.session_ended),
       first.total_break_minutes.toString(),
       netMins !== null ? netMins.toString() : "",
-      netMins !== null ? calcNet(first.session_started, first.session_ended, first.total_break_minutes) : "Devam ediyor",
+      netMins !== null
+        ? calcNet(first.session_started, first.session_ended, first.total_break_minutes)
+        : "Devam ediyor",
       eventLog,
     ];
   });

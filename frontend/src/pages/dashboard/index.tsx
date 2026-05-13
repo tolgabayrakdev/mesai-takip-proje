@@ -39,13 +39,16 @@ const EVENT_DOT: Record<EventType, string> = {
   mesai_bitir: "bg-blue-500",
 };
 
-const STATUS_CONFIG: Record<ShiftStatus, {
-  label: string;
-  bg: string;
-  text: string;
-  dot: string;
-  pulse: boolean;
-}> = {
+const STATUS_CONFIG: Record<
+  ShiftStatus,
+  {
+    label: string;
+    bg: string;
+    text: string;
+    dot: string;
+    pulse: boolean;
+  }
+> = {
   mesaiye_baslamadi: {
     label: "Henüz Başlanmadı",
     bg: "bg-muted/50",
@@ -177,26 +180,26 @@ export default function DashboardIndex() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <p className="text-muted-foreground text-sm">Yükleniyor...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="mx-auto max-w-2xl space-y-6">
       {/* Başlık + saat */}
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">Hoş geldiniz</p>
+          <p className="text-muted-foreground text-sm">Hoş geldiniz</p>
           <h1 className="text-2xl font-bold tracking-tight">{user.full_name}</h1>
         </div>
         <div className="flex items-start gap-3">
           <div className="text-right">
-            <p className="text-2xl font-mono font-semibold tabular-nums">
+            <p className="font-mono text-2xl font-semibold tabular-nums">
               {now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {now.toLocaleDateString("tr-TR", {
                 weekday: "long",
                 day: "numeric",
@@ -206,7 +209,12 @@ export default function DashboardIndex() {
           </div>
           <Dialog open={qrOpen} onOpenChange={setQrOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="icon" className="h-9 w-9 shrink-0" title="QR ile işlem yap">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 shrink-0"
+                title="QR ile işlem yap"
+              >
                 <QrCode className="h-4 w-4" />
               </Button>
             </DialogTrigger>
@@ -230,12 +238,14 @@ export default function DashboardIndex() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span
-              className={`h-2.5 w-2.5 rounded-full shrink-0 ${cfg.dot} ${cfg.pulse ? "animate-pulse" : ""}`}
+              className={`h-2.5 w-2.5 shrink-0 rounded-full ${cfg.dot} ${cfg.pulse ? "animate-pulse" : ""}`}
             />
             <span className={`font-semibold ${cfg.text}`}>{cfg.label}</span>
           </div>
           {elapsedMs !== null && (
-            <span className={`text-sm font-mono font-medium tabular-nums flex items-center gap-1 ${cfg.text}`}>
+            <span
+              className={`flex items-center gap-1 font-mono text-sm font-medium tabular-nums ${cfg.text}`}
+            >
               <Timer className="h-3.5 w-3.5" />
               {formatElapsed(elapsedMs)}
             </span>
@@ -245,18 +255,22 @@ export default function DashboardIndex() {
         {shiftStartEvent && (
           <div className="mt-4 flex gap-6 text-sm">
             <div>
-              <p className={`text-xs mb-0.5 opacity-60 ${cfg.text}`}>Başlangıç</p>
-              <p className={`font-semibold ${cfg.text}`}>{formatTime(shiftStartEvent.occurred_at)}</p>
+              <p className={`mb-0.5 text-xs opacity-60 ${cfg.text}`}>Başlangıç</p>
+              <p className={`font-semibold ${cfg.text}`}>
+                {formatTime(shiftStartEvent.occurred_at)}
+              </p>
             </div>
             {shiftEndEvent && (
               <div>
-                <p className={`text-xs mb-0.5 opacity-60 ${cfg.text}`}>Bitiş</p>
-                <p className={`font-semibold ${cfg.text}`}>{formatTime(shiftEndEvent.occurred_at)}</p>
+                <p className={`mb-0.5 text-xs opacity-60 ${cfg.text}`}>Bitiş</p>
+                <p className={`font-semibold ${cfg.text}`}>
+                  {formatTime(shiftEndEvent.occurred_at)}
+                </p>
               </div>
             )}
             {totalBreakMinutes > 0 && (
               <div>
-                <p className={`text-xs mb-0.5 opacity-60 ${cfg.text}`}>Toplam Mola</p>
+                <p className={`mb-0.5 text-xs opacity-60 ${cfg.text}`}>Toplam Mola</p>
                 <p className={`font-semibold ${cfg.text}`}>{totalBreakMinutes} dk</p>
               </div>
             )}
@@ -269,7 +283,7 @@ export default function DashboardIndex() {
         <Button
           onClick={() => callShiftAction("/shift/start")}
           disabled={status !== "mesaiye_baslamadi" || actionLoading}
-          className="h-14 flex-col gap-1.5 bg-green-600 hover:bg-green-700 text-white disabled:opacity-30"
+          className="h-14 flex-col gap-1.5 bg-green-600 text-white hover:bg-green-700 disabled:opacity-30"
         >
           <Play className="h-4 w-4" />
           <span className="text-xs font-medium">Mesai Başlat</span>
@@ -296,7 +310,7 @@ export default function DashboardIndex() {
           variant="outline"
           onClick={() => callShiftAction("/shift/end")}
           disabled={status !== "mesaide" || actionLoading}
-          className="h-14 flex-col gap-1.5 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/30 disabled:opacity-30"
+          className="h-14 flex-col gap-1.5 border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50 disabled:opacity-30 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/30"
         >
           <Square className="h-4 w-4" />
           <span className="text-xs font-medium">Mesai Bitir</span>
@@ -307,20 +321,19 @@ export default function DashboardIndex() {
       {events.length > 0 && (
         <Card className="overflow-hidden">
           <CardContent className="p-0">
-            <div className="px-5 py-3 border-b bg-muted/30">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="bg-muted/30 border-b px-5 py-3">
+              <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
                 Bugünkü Hareketler
               </p>
             </div>
             <div className="divide-y">
               {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="flex items-center gap-3 px-5 py-3"
-                >
-                  <span className={`h-2 w-2 rounded-full shrink-0 ${EVENT_DOT[event.event_type]}`} />
-                  <span className="text-sm flex-1">{EVENT_LABELS[event.event_type]}</span>
-                  <span className="text-sm tabular-nums text-muted-foreground">
+                <div key={event.id} className="flex items-center gap-3 px-5 py-3">
+                  <span
+                    className={`h-2 w-2 shrink-0 rounded-full ${EVENT_DOT[event.event_type]}`}
+                  />
+                  <span className="flex-1 text-sm">{EVENT_LABELS[event.event_type]}</span>
+                  <span className="text-muted-foreground text-sm tabular-nums">
                     {formatTime(event.occurred_at)}
                   </span>
                 </div>

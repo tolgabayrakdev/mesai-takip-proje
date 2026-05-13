@@ -74,18 +74,18 @@ export default function AdminQrCode() {
   }
 
   return (
-    <div className="space-y-6 max-w-lg mx-auto">
+    <div className="mx-auto max-w-lg space-y-6">
       {/* Başlık */}
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate("/admin")}
-          className="flex items-center justify-center h-8 w-8 rounded-lg border bg-card hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+          className="bg-card hover:bg-muted text-muted-foreground hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg border transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         <div>
           <h1 className="text-xl font-bold tracking-tight">QR Kod Yönetimi</h1>
-          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+          <p className="text-muted-foreground mt-0.5 flex items-center gap-1 text-xs">
             <QrCode className="h-3 w-3" />
             Personel giriş/çıkış kodu
           </p>
@@ -93,32 +93,33 @@ export default function AdminQrCode() {
       </div>
 
       {/* QR Kartı */}
-      <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="px-5 py-3.5 border-b bg-muted/30">
+      <div className="bg-card overflow-hidden rounded-xl border">
+        <div className="bg-muted/30 border-b px-5 py-3.5">
           <p className="text-sm font-semibold">Duvar QR Kodu</p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Bu kodu yazdırıp ofis girişine asın. Personel telefonuyla okutarak mesai işlemi yapabilir.
+          <p className="text-muted-foreground mt-0.5 text-xs">
+            Bu kodu yazdırıp ofis girişine asın. Personel telefonuyla okutarak mesai işlemi
+            yapabilir.
           </p>
         </div>
 
-        <div className="p-8 flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6 p-8">
           {/* QR Canvas */}
-          <div className="rounded-2xl border-2 border-border p-4 bg-white">
+          <div className="border-border rounded-2xl border-2 bg-white p-4">
             <canvas ref={canvasRef} />
           </div>
 
           {/* URL bilgisi */}
           <div className="text-center">
-            <p className="text-xs text-muted-foreground">Kodlanan adres:</p>
-            <p className="text-sm font-mono font-medium mt-0.5 break-all">{qrUrl}</p>
+            <p className="text-muted-foreground text-xs">Kodlanan adres:</p>
+            <p className="mt-0.5 font-mono text-sm font-medium break-all">{qrUrl}</p>
           </div>
 
           {/* Butonlar */}
-          <div className="flex gap-3 w-full">
+          <div className="flex w-full gap-3">
             <button
               onClick={handleDownload}
               disabled={!qrDataUrl}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border bg-card hover:bg-muted px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40"
+              className="bg-card hover:bg-muted flex flex-1 items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40"
             >
               <Download className="h-4 w-4" />
               PNG İndir
@@ -126,7 +127,7 @@ export default function AdminQrCode() {
             <button
               onClick={handlePrint}
               disabled={!qrDataUrl}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors disabled:opacity-40"
             >
               <Printer className="h-4 w-4" />
               Yazdır
@@ -136,9 +137,9 @@ export default function AdminQrCode() {
       </div>
 
       {/* Kullanım kılavuzu */}
-      <div className="rounded-xl border bg-card p-5 space-y-4">
+      <div className="bg-card space-y-4 rounded-xl border p-5">
         <p className="text-sm font-semibold">Nasıl Çalışır?</p>
-        <ol className="space-y-3 text-sm text-muted-foreground">
+        <ol className="text-muted-foreground space-y-3 text-sm">
           {[
             "QR kodu yazdırıp ofis girişine veya çıkışına asın.",
             "Personel telefon kamerası ile kodu okuttuğunda uygulama açılır.",
@@ -147,7 +148,7 @@ export default function AdminQrCode() {
             "Personel butona basarak işlemi tamamlar.",
           ].map((step, i) => (
             <li key={i} className="flex gap-3">
-              <span className="flex-shrink-0 h-5 w-5 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-foreground">
+              <span className="bg-muted text-foreground flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold">
                 {i + 1}
               </span>
               {step}

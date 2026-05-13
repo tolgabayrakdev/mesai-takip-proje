@@ -19,7 +19,8 @@ export default function SignIn() {
     e.preventDefault();
 
     if (!email.trim()) return toast.error("E-posta adresi boş olamaz");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast.error("Geçerli bir e-posta adresi giriniz");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return toast.error("Geçerli bir e-posta adresi giriniz");
     if (!password) return toast.error("Şifre boş olamaz");
     if (password.length < 6) return toast.error("Şifre en az 6 karakter olmalıdır");
 
@@ -50,19 +51,19 @@ export default function SignIn() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="bg-background flex min-h-screen items-center justify-center px-4">
       <div className="absolute top-4 right-4">
         <ModeToggle />
       </div>
 
       <div className="w-full max-w-sm space-y-8">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-primary text-primary-foreground mx-auto shadow-sm">
+        <div className="space-y-3 text-center">
+          <div className="bg-primary text-primary-foreground mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-sm">
             <Clock className="h-7 w-7" />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Mesai Takip</h1>
-            <p className="text-sm text-muted-foreground mt-1">Hesabınıza giriş yapın</p>
+            <p className="text-muted-foreground mt-1 text-sm">Hesabınıza giriş yapın</p>
           </div>
         </div>
 
@@ -90,7 +91,7 @@ export default function SignIn() {
               className="h-11"
             />
           </div>
-          <Button type="submit" className="w-full h-11" disabled={loading}>
+          <Button type="submit" className="h-11 w-full" disabled={loading}>
             {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </Button>
         </form>

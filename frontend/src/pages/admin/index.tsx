@@ -3,11 +3,7 @@ import { useNavigate } from "react-router";
 import { API_URL } from "@/lib/config";
 import { Clock, Coffee, Play, Square, User, ChevronRight, QrCode } from "lucide-react";
 
-type ShiftStatus =
-  | "mesaiye_baslamadi"
-  | "mesaide"
-  | "molada"
-  | "mesai_bitti";
+type ShiftStatus = "mesaiye_baslamadi" | "mesaide" | "molada" | "mesai_bitti";
 
 interface Employee {
   id: number;
@@ -18,12 +14,15 @@ interface Employee {
   totalBreakMinutes: number;
 }
 
-const STATUS_CONFIG: Record<ShiftStatus, {
-  label: string;
-  badge: string;
-  dot: string;
-  icon: typeof Clock;
-}> = {
+const STATUS_CONFIG: Record<
+  ShiftStatus,
+  {
+    label: string;
+    badge: string;
+    dot: string;
+    icon: typeof Clock;
+  }
+> = {
   mesaiye_baslamadi: {
     label: "Başlamadı",
     badge: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
@@ -86,7 +85,10 @@ export default function AdminIndex() {
   }, []);
 
   const counts = employees.reduce<Record<ShiftStatus, number>>(
-    (acc, e) => { acc[e.todayStatus]++; return acc; },
+    (acc, e) => {
+      acc[e.todayStatus]++;
+      return acc;
+    },
     { mesaiye_baslamadi: 0, mesaide: 0, molada: 0, mesai_bitti: 0 }
   );
 
@@ -98,7 +100,7 @@ export default function AdminIndex() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <p className="text-muted-foreground text-sm">Yükleniyor...</p>
       </div>
     );
@@ -109,13 +111,18 @@ export default function AdminIndex() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Yönetici Paneli</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {new Date().toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+          <p className="text-muted-foreground mt-1 text-sm">
+            {new Date().toLocaleDateString("tr-TR", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         </div>
         <button
           onClick={() => navigate("/admin/qr")}
-          className="flex items-center gap-2 rounded-xl border bg-card hover:bg-muted px-3.5 py-2 text-sm font-medium transition-colors shrink-0"
+          className="bg-card hover:bg-muted flex shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-medium transition-colors"
         >
           <QrCode className="h-4 w-4" />
           QR Kod
@@ -128,14 +135,18 @@ export default function AdminIndex() {
           const cfg = STATUS_CONFIG[key];
           const Icon = cfg.icon;
           return (
-            <div key={key} className="rounded-xl border bg-card p-4 space-y-3">
+            <div key={key} className="bg-card space-y-3 rounded-xl border p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground font-medium">{STAT_LABELS[key]}</span>
-                <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="text-muted-foreground text-xs font-medium">
+                  {STAT_LABELS[key]}
+                </span>
+                <Icon className="text-muted-foreground h-3.5 w-3.5" />
               </div>
               <div className="flex items-end justify-between">
                 <span className="text-3xl font-bold tabular-nums">{counts[key]}</span>
-                <span className={`inline-flex items-center gap-1.5 text-xs font-medium rounded-full px-2 py-0.5 ${cfg.badge}`}>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${cfg.badge}`}
+                >
                   <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
                   {cfg.label}
                 </span>
@@ -196,11 +207,11 @@ function EmployeeSection({
   muted?: boolean;
 }) {
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
-      <div className={`px-5 py-3 border-b ${muted ? "bg-muted/30" : "bg-muted/50"}`}>
+    <div className="bg-card overflow-hidden rounded-xl border">
+      <div className={`border-b px-5 py-3 ${muted ? "bg-muted/30" : "bg-muted/50"}`}>
         <p className={`text-sm font-semibold ${muted ? "text-muted-foreground" : ""}`}>
           {title}
-          <span className="font-normal text-muted-foreground ml-1.5">({employees.length})</span>
+          <span className="text-muted-foreground ml-1.5 font-normal">({employees.length})</span>
         </p>
       </div>
       <div className="divide-y">
@@ -209,33 +220,37 @@ function EmployeeSection({
           return (
             <div
               key={emp.id}
-              className="flex items-center gap-4 px-5 py-3.5 hover:bg-muted/20 transition-colors"
+              className="hover:bg-muted/20 flex items-center gap-4 px-5 py-3.5 transition-colors"
             >
-              <span className={`h-2 w-2 rounded-full shrink-0 ${cfg.dot} ${
-                emp.todayStatus === "mesaide" || emp.todayStatus === "molada" ? "animate-pulse" : ""
-              }`} />
+              <span
+                className={`h-2 w-2 shrink-0 rounded-full ${cfg.dot} ${
+                  emp.todayStatus === "mesaide" || emp.todayStatus === "molada"
+                    ? "animate-pulse"
+                    : ""
+                }`}
+              />
 
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{emp.full_name}</p>
-                <p className="text-xs text-muted-foreground truncate">{emp.email}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{emp.full_name}</p>
+                <p className="text-muted-foreground truncate text-xs">{emp.email}</p>
               </div>
 
-              <div className="flex items-center gap-4 shrink-0">
+              <div className="flex shrink-0 items-center gap-4">
                 {showStart && emp.startedAt && (
-                  <div className="hidden sm:block text-right">
-                    <p className="text-xs text-muted-foreground">Başlangıç</p>
-                    <p className="text-sm tabular-nums font-medium">{formatTime(emp.startedAt)}</p>
+                  <div className="hidden text-right sm:block">
+                    <p className="text-muted-foreground text-xs">Başlangıç</p>
+                    <p className="text-sm font-medium tabular-nums">{formatTime(emp.startedAt)}</p>
                   </div>
                 )}
                 {showBreak && (
-                  <div className="hidden sm:block text-right">
-                    <p className="text-xs text-muted-foreground">Mola</p>
-                    <p className="text-sm tabular-nums font-medium">
+                  <div className="hidden text-right sm:block">
+                    <p className="text-muted-foreground text-xs">Mola</p>
+                    <p className="text-sm font-medium tabular-nums">
                       {emp.totalBreakMinutes > 0 ? `${emp.totalBreakMinutes} dk` : "—"}
                     </p>
                   </div>
                 )}
-                <span className={`text-xs font-medium rounded-full px-2.5 py-1 ${cfg.badge}`}>
+                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${cfg.badge}`}>
                   {cfg.label}
                 </span>
                 <button

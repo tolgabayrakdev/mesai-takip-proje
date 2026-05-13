@@ -43,20 +43,20 @@ export default function LayoutContent() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="border-b bg-card sticky top-0 z-10 px-6 h-14 flex items-center justify-between">
+    <div className="bg-background min-h-screen">
+      <nav className="bg-card sticky top-0 z-10 flex h-14 items-center justify-between border-b px-6">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-primary text-primary-foreground">
+          <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg">
             <Clock className="h-4 w-4" />
           </div>
           <span className="font-semibold">Mesai Takip</span>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:block text-right">
+          <div className="hidden text-right sm:block">
             <p className="text-sm font-medium">{user.full_name}</p>
-            <p className="text-xs text-muted-foreground">{user.email}</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">{user.email}</p>
+            <p className="text-muted-foreground text-xs">
               {user.role === "yonetici" ? "Yönetici" : "Personel"}
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function LayoutContent() {
         </div>
       </nav>
 
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
+      <main className="container mx-auto max-w-5xl px-4 py-8">
         <Outlet context={user} />
       </main>
 
@@ -81,9 +81,7 @@ export default function LayoutContent() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Çıkış yapmak istiyor musunuz?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Oturumunuz sonlandırılacaktır.
-            </AlertDialogDescription>
+            <AlertDialogDescription>Oturumunuz sonlandırılacaktır.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>İptal</AlertDialogCancel>
