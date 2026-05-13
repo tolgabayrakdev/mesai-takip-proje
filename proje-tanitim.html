@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mesai Takip Projesi — Tanıtım</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:#f8fafc; color:#1e293b; font-size:12px; line-height:1.5; }
+
+    .cover {
+      background:linear-gradient(140deg,#0f172a 0%,#1e3a5f 55%,#0f172a 100%);
+      color:white; min-height:100vh; display:flex; flex-direction:column;
+      justify-content:center; align-items:center; text-align:center;
+      padding:50px 40px; page-break-after:always; position:relative; overflow:hidden;
+    }
+    .cover::before { content:''; position:absolute; width:450px; height:450px; border-radius:50%; background:rgba(59,130,246,0.07); top:-120px; left:-100px; }
+    .cover::after  { content:''; position:absolute; width:350px; height:350px; border-radius:50%; background:rgba(99,102,241,0.07); bottom:-80px; right:-80px; }
+    .cover-badge { background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.35); color:#93c5fd; padding:5px 16px; border-radius:20px; font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; margin-bottom:20px; position:relative; z-index:1; }
+    .cover h1 { font-size:42px; font-weight:800; line-height:1.1; margin-bottom:6px; position:relative; z-index:1; }
+    .cover h1 span { background:linear-gradient(90deg,#60a5fa,#818cf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .cover-sub { font-size:13px; color:#94a3b8; margin-bottom:36px; max-width:440px; position:relative; z-index:1; }
+    .cover-links { display:flex; gap:20px; margin-bottom:36px; position:relative; z-index:1; flex-wrap:wrap; justify-content:center; }
+    .clc { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); border-radius:14px; padding:16px 20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:180px; }
+    .clc .cl-qr { background:white; border-radius:8px; padding:6px; }
+    .clc .cl-qr svg { width:90px; height:90px; display:block; }
+    .clc .cl-type { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+    .clc.fe .cl-type { color:#34d399; }
+    .clc.be .cl-type { color:#60a5fa; }
+    .clc a { font-size:9.5px; color:#94a3b8; text-decoration:none; word-break:break-all; text-align:center; max-width:180px; }
+    .cover-divider { width:50px; height:2px; background:linear-gradient(90deg,#3b82f6,#6366f1); margin:0 auto 16px; border-radius:2px; position:relative; z-index:1; }
+    .cover-dev { position:relative; z-index:1; color:#64748b; font-size:11px; }
+    .cover-dev strong { color:#e2e8f0; }
+
+    .page { max-width:780px; margin:0 auto; padding:32px 44px 24px; }
+    .page-break { page-break-before:always; }
+
+    .sh { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-bottom:7px; border-bottom:2px solid #e2e8f0; }
+    .sh-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .ic-blue{background:#eff6ff;} .ic-green{background:#f0fdf4;} .ic-purple{background:#faf5ff;} .ic-orange{background:#fff7ed;} .ic-teal{background:#f0fdfa;}
+    .sh h2 { font-size:15px; font-weight:700; color:#0f172a; }
+    .sh p  { font-size:10px; color:#64748b; margin-top:1px; }
+
+    .intro-box { background:linear-gradient(135deg,#eff6ff,#f5f3ff); border:1px solid #c7d2fe; border-radius:10px; padding:8px 14px; margin-bottom:12px; }
+    .intro-box p { color:#374151; font-size:11px; line-height:1.55; }
+
+    .fg3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px; margin-bottom:12px; }
+    .fg2 { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:0; }
+    .fc { background:white; border:1px solid #e2e8f0; border-radius:8px; padding:8px 11px; border-left:3px solid #3b82f6; }
+    .fc.green{border-left-color:#22c55e;} .fc.purple{border-left-color:#8b5cf6;} .fc.orange{border-left-color:#f97316;} .fc.teal{border-left-color:#14b8a6;} .fc.pink{border-left-color:#ec4899;} .fc.indigo{border-left-color:#6366f1;}
+    .fc h4 { font-size:10px; font-weight:700; color:#0f172a; margin-bottom:2px; }
+    .fc p  { font-size:9.5px; color:#64748b; line-height:1.3; }
+
+    table { width:100%; border-collapse:collapse; margin-bottom:12px; font-size:11px; }
+    thead tr { background:#f1f5f9; }
+    thead th { padding:5px 10px; text-align:left; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:0.4px; color:#475569; border-bottom:2px solid #e2e8f0; }
+    tbody tr:nth-child(even) { background:#f8fafc; }
+    tbody td { padding:4px 10px; border-bottom:1px solid #f1f5f9; color:#374151; vertical-align:top; }
+    tbody td:first-child { font-family:monospace; font-size:10px; color:#3b82f6; font-weight:600; }
+    .tg-sep td { background:#f1f5f9 !important; font-weight:600; color:#475569 !important; font-size:9.5px !important; padding:3px 10px; text-transform:uppercase; letter-spacing:0.4px; font-family:inherit !important; }
+    .m { display:inline-block; padding:1px 5px; border-radius:3px; font-size:9px; font-weight:700; font-family:monospace; }
+    .m.get{background:#dcfce7;color:#15803d;} .m.post{background:#dbeafe;color:#1d4ed8;}
+
+    .tech-grid { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+    .tag { background:#f1f5f9; border:1px solid #e2e8f0; border-radius:5px; padding:2px 9px; font-size:10px; font-weight:500; color:#334155; }
+    .tag.blue{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;} .tag.green{background:#f0fdf4;border-color:#bbf7d0;color:#15803d;} .tag.purple{background:#faf5ff;border-color:#e9d5ff;color:#7c3aed;}
+
+    .arch-box { background:#0f172a; border-radius:9px; padding:11px 16px; margin-bottom:12px; font-family:'Courier New',monospace; font-size:10.5px; color:#94a3b8; line-height:1.75; }
+    .arch-box .at { color:#60a5fa; font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .arch-box .aa { color:#f97316; }
+    .arch-box .al { color:#e2e8f0; }
+
+    .sec-grid { display:grid; gap:7px; margin-bottom:0; }
+    .sc { background:white; border:1px solid #e2e8f0; border-radius:9px; padding:10px 12px; text-align:center; }
+    .sc .si { font-size:16px; margin-bottom:3px; }
+    .sc h4 { font-size:10px; font-weight:700; color:#0f172a; margin-bottom:2px; }
+    .sc p  { font-size:9.5px; color:#64748b; line-height:1.3; }
+
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+
+    .qr-feature { display:flex; margin-bottom:12px; background:white; border:1px solid #e2e8f0; border-radius:11px; overflow:hidden; }
+    .qr-left { background:#0f172a; padding:10px 14px; display:flex; flex-direction:column; align-items:center; gap:5px; flex-shrink:0; width:100px; justify-content:center; }
+    .qr-left .qr-box { background:white; border-radius:5px; padding:3px; }
+    .qr-left .qr-box svg { width:56px; height:56px; display:block; }
+    .qr-left .qr-label { color:#60a5fa; font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; text-align:center; }
+    .qr-right { padding:9px 14px; flex:1; }
+    .qr-right h3 { font-size:11.5px; font-weight:700; color:#0f172a; margin-bottom:4px; }
+    .qr-right p { font-size:10px; color:#475569; margin-bottom:6px; line-height:1.4; }
+    .qr-steps { display:flex; flex-direction:column; gap:3px; }
+    .qr-step { display:flex; align-items:flex-start; gap:6px; font-size:9.5px; color:#374151; }
+    .qr-step-n { background:#f1f5f9; border-radius:50%; width:14px; height:14px; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:700; flex-shrink:0; margin-top:1px; }
+
+    .db-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:7px; margin-bottom:8px; }
+    .db-card { background:white; border:1px solid #e2e8f0; border-radius:9px; padding:8px 11px; }
+    .db-card h4 { font-size:10.5px; font-weight:700; color:#0f172a; margin-bottom:5px; padding-bottom:3px; border-bottom:1px solid #f1f5f9; font-family:monospace; }
+    .db-row { display:flex; gap:4px; padding:1.5px 0; font-size:9.5px; }
+    .db-col{font-family:monospace;color:#6366f1;font-weight:600;min-width:100px;} .db-type{color:#f97316;min-width:65px;} .db-desc{color:#64748b;}
+
+    .footer { margin-top:20px; padding-top:10px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#94a3b8; }
+    .footer strong { color:#334155; }
+  </style>
+</head>
+<body>
+
+<!-- SAYFA 1 — KAPAK -->
+<div class="cover">
+  <div class="cover-badge">Proje Tanıtımı</div>
+  <h1>Mesai Takip<br><span>Projesi</span></h1>
+  <p class="cover-sub">Personelin günlük mesai başlatma, molaya çıkma ve mesai bitirme işlemlerini anlık takip eden minimal örnek web uygulamasıdır.</p>
+  <div class="cover-links">
+    <div class="clc fe">
+      <div class="cl-qr"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h35v35H0z"/><path stroke="#000000" d="M1 1.5h7m2 0h3m4 0h4m2 0h2m2 0h7M1 2.5h1m5 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m3 0h2m1 0h1m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h3m4 0h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m1 0h10m1 0h3m2 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h3m10 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h2m2 0h1m1 0h1m1 0h1m4 0h2m1 0h1M1 9.5h1m1 0h5m2 0h3m1 0h2m1 0h2m2 0h1m1 0h3m1 0h5M1 10.5h1m3 0h1m4 0h5m2 0h2m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1M1 11.5h1m1 0h2m1 0h4m3 0h6m4 0h1m1 0h2m2 0h1m1 0h2M1 12.5h2m3 0h1m5 0h1m1 0h1m3 0h2m2 0h2m2 0h1m2 0h4M1 13.5h1m1 0h6m1 0h1m4 0h3m2 0h2m1 0h1m1 0h2m2 0h2m1 0h2M2 14.5h1m2 0h2m3 0h2m2 0h1m1 0h1m2 0h3m2 0h1m1 0h2m2 0h4M5 15.5h3m2 0h1m1 0h1m1 0h4m1 0h1m2 0h2m2 0h7M1 16.5h1m2 0h2m3 0h3m1 0h1m1 0h2m2 0h1m2 0h1m2 0h3m1 0h3M1 17.5h1m1 0h2m2 0h4m1 0h5m1 0h1m6 0h2m1 0h2m3 0h1M3 18.5h1m2 0h1m5 0h4m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h1M1 19.5h9m2 0h2m1 0h3m1 0h1m1 0h2m2 0h1m2 0h2m1 0h1M1 20.5h3m1 0h2m1 0h1m6 0h3m2 0h5m3 0h4m1 0h1M3 21.5h3m1 0h2m1 0h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h3m1 0h2M1 22.5h2m1 0h1m4 0h1m2 0h6m2 0h2m1 0h2m2 0h2m1 0h2m1 0h1M1 23.5h1m2 0h2m1 0h1m2 0h2m1 0h1m4 0h2m1 0h3m1 0h5m2 0h1M1 24.5h1m1 0h3m5 0h5m1 0h1m1 0h1m2 0h5m1 0h1m1 0h3M1 25.5h1m1 0h2m2 0h1m2 0h2m1 0h2m2 0h2m4 0h1m1 0h5m2 0h1M9 26.5h1m1 0h4m2 0h5m3 0h1m3 0h1m1 0h1m1 0h1M1 27.5h7m2 0h2m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h4m3 0h4m2 0h4m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h3m2 0h1m4 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h2m1 0h1m3 0h1m1 0h4m2 0h3m2 0h5M1 31.5h1m1 0h3m1 0h1m1 0h1m4 0h1m1 0h3m3 0h2m3 0h2m2 0h1M1 32.5h1m5 0h1m2 0h3m1 0h3m3 0h3m1 0h1m1 0h2m1 0h1m1 0h1M1 33.5h7m1 0h2m3 0h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h2m1 0h1m1 0h1"/></svg></div>
+      <div class="cl-type">🌐 Frontend</div>
+      <a href="https://mindful-light-production-efd2.up.railway.app/">mindful-light-production-efd2<br>.up.railway.app</a>
+    </div>
+    <div class="clc be">
+      <div class="cl-qr"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h35v35H0z"/><path stroke="#000000" d="M1 1.5h7m1 0h1m1 0h2m1 0h1m2 0h2m1 0h3m1 0h2m1 0h7M1 2.5h1m5 0h1m1 0h1m2 0h3m2 0h1m1 0h1m1 0h5m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m2 0h2m1 0h1m2 0h1m1 0h1m1 0h1m6 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h3m3 0h1m1 0h1m5 0h2m2 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h1m2 0h1m2 0h2m2 0h1m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m2 0h1m1 0h1m1 0h2m2 0h1m1 0h2m5 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h3m1 0h1m1 0h1m2 0h1m1 0h1m2 0h3M1 9.5h1m1 0h2m1 0h3m1 0h3m2 0h1m1 0h3m1 0h2m1 0h1m2 0h1m2 0h1m1 0h2M3 10.5h4m2 0h1m2 0h2m1 0h1m1 0h1m1 0h6m2 0h2m1 0h2m1 0h1M2 11.5h2m1 0h1m1 0h1m1 0h1m2 0h2m1 0h1m2 0h1m5 0h2m1 0h4m1 0h2M1 12.5h1m3 0h2m1 0h1m3 0h1m1 0h4m1 0h3m4 0h1m1 0h1m1 0h1m1 0h1M2 13.5h3m1 0h2m1 0h1m2 0h2m2 0h1m2 0h2m2 0h1m1 0h1m3 0h2m1 0h1M1 14.5h1m3 0h1m2 0h1m3 0h1m4 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h3M1 15.5h2m1 0h2m1 0h2m1 0h3m1 0h7m4 0h1m1 0h4M2 16.5h1m2 0h1m2 0h3m1 0h2m1 0h1m1 0h1m4 0h1m2 0h3m2 0h2M1 17.5h1m1 0h5m2 0h2m1 0h1m1 0h3m1 0h1m1 0h3m2 0h2m1 0h3M4 18.5h2m2 0h5m1 0h3m1 0h1m3 0h6m1 0h2m2 0h1M1 19.5h1m1 0h5m1 0h1m2 0h3m1 0h1m1 0h1m3 0h1m3 0h4m1 0h2M1 20.5h2m2 0h1m4 0h1m4 0h1m5 0h1m1 0h1m5 0h1m2 0h1M1 21.5h3m1 0h1m1 0h1m1 0h1m1 0h2m1 0h2m3 0h5m4 0h1m1 0h3M1 22.5h2m2 0h2m3 0h1m1 0h5m1 0h5m1 0h1m1 0h2m2 0h1m2 0h1M3 23.5h1m2 0h2m2 0h1m1 0h2m1 0h1m1 0h1m3 0h1m2 0h3m2 0h1m1 0h3M2 24.5h5m1 0h1m3 0h2m3 0h1m2 0h1m7 0h1m1 0h1m1 0h1M1 25.5h1m2 0h1m1 0h2m2 0h1m2 0h1m2 0h3m2 0h1m1 0h1m1 0h5m2 0h1M9 26.5h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m2 0h1m3 0h2M1 27.5h7m1 0h2m2 0h3m4 0h3m1 0h2m1 0h1m1 0h1M1 28.5h1m5 0h1m1 0h3m1 0h1m1 0h3m4 0h1m1 0h2m3 0h4M1 29.5h1m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h8m1 0h3M1 30.5h1m1 0h3m1 0h1m1 0h1m2 0h1m6 0h1m1 0h4m3 0h1m1 0h2m1 0h1M1 31.5h1m1 0h3m1 0h1m1 0h1m4 0h1m6 0h1m2 0h2m1 0h2M1 32.5h1m5 0h1m4 0h1m2 0h5m1 0h1m1 0h3m1 0h4m2 0h1M1 33.5h7m1 0h2m1 0h3m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1"/></svg></div>
+      <div class="cl-type">⚙️ Backend API</div>
+      <a href="https://mesai-takip-proje-production.up.railway.app/">mesai-takip-proje-production<br>.up.railway.app</a>
+    </div>
+  </div>
+  <div class="cover-divider"></div>
+  <div class="cover-dev" style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+    <span>Geliştiren: <strong>tolgabayrak</strong></span>
+    <a href="https://github.com/tolgabayrakdev/mesai-takip-proje" style="color:#60a5fa;font-size:10.5px;text-decoration:none;display:flex;align-items:center;gap:5px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="#60a5fa"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+      github.com/tolgabayrakdev/mesai-takip-proje
+    </a>
+  </div>
+</div>
+
+<!-- SAYFA 2 — FRONTEND -->
+<div class="page">
+  <div class="sh">
+    <div class="sh-icon ic-green">🌐</div>
+    <div><h2>Frontend</h2><p>React + TypeScript SPA — Railway'de canlı</p></div>
+  </div>
+  <div class="intro-box">
+    <p>Personel ve yönetici rollerine göre ayrışan iki panel sunar. Personel mesai işlemlerini yapar; yönetici tüm çalışanları anlık izler, raporları indirir. <strong>Dark mode</strong>, responsive tasarım ve <strong>QR kod</strong> desteğiyle her ortamda kullanılabilir.</p>
+  </div>
+
+  <div class="sh"><div class="sh-icon ic-blue">📦</div><div><h2>Teknoloji Yığını</h2></div></div>
+  <div class="tech-grid">
+    <span class="tag green">React 19</span><span class="tag green">TypeScript</span><span class="tag green">Vite 8</span><span class="tag green">TailwindCSS 4</span>
+    <span class="tag purple">shadcn/ui</span><span class="tag purple">Radix UI</span><span class="tag">React Router 7</span><span class="tag">next-themes</span>
+    <span class="tag">sonner</span><span class="tag">lucide-react</span><span class="tag">qrcode</span>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="sh" style="margin-bottom:12px;"><div class="sh-icon ic-purple">🗂️</div><div><h2>Klasör Yapısı</h2></div></div>
+      <div class="arch-box" style="margin-bottom:0;">
+        <div class="at">src/</div>
+        ├── <span class="al">components/</span>&nbsp; # UI bileşenleri<br>
+        ├── <span class="al">layouts/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Sayfa iskeletleri<br>
+        ├── <span class="al">pages/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Rota sayfaları<br>
+        └── <span class="al">lib/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Yardımcı fonksiyonlar
+      </div>
+    </div>
+    <div>
+      <div class="sh" style="margin-bottom:12px;"><div class="sh-icon ic-orange">👥</div><div><h2>Rol Bazlı Ekranlar</h2></div></div>
+      <div class="fg2">
+        <div class="fc green"><h4>👤 Personel</h4><p>Mesai/mola işlemleri, canlı süre sayacı, günlük hareket geçmişi.</p></div>
+        <div class="fc purple"><h4>👔 Yönetici</h4><p>Anlık personel listesi, 10 sn otomatik yenileme, istatistik kartları.</p></div>
+        <div class="fc orange"><h4>📅 Geçmiş</h4><p>Günlük/haftalık/aylık filtreleme ve detay görünümü.</p></div>
+        <div class="fc teal"><h4>📥 Raporlama</h4><p>PDF (print API) ve CSV; BOM dahil Türkçe karakter.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><div class="sh-icon ic-teal">✨</div><div><h2>UI / UX Özellikleri</h2></div></div>
+  <div class="fg3" style="margin-bottom:18px;">
+    <div class="fc"><h4>🌗 Dark Mode</h4><p>Sistem temasına uyumlu; kullanıcı tercihi kalıcı saklanır.</p></div>
+    <div class="fc green"><h4>📱 Responsive</h4><p>Mobil, tablet ve masaüstü için optimize düzen.</p></div>
+    <div class="fc pink"><h4>🔔 Toast Bildirimleri</h4><p>sonner ile anlık başarı/hata bildirimleri.</p></div>
+    <div class="fc orange"><h4>🚪 Güvenli Çıkış</h4><p>Kazara çıkışı önleyen onay dialogu.</p></div>
+    <div class="fc purple"><h4>🎨 Renk Kodlu</h4><p>Yeşil/sarı/mavi/gri ile anlık durum görsel taraması.</p></div>
+    <div class="fc indigo"><h4>🕐 Canlı Saat</h4><p>Navbar'da saniye bazlı güncellenen saat göstergesi.</p></div>
+  </div>
+
+  <div class="sh"><div class="sh-icon ic-purple">📱</div><div><h2>QR Kod ile Hızlı Mesai</h2><p>Telefon kamerasıyla tek dokunuşta giriş/çıkış</p></div></div>
+  <div class="qr-feature">
+    <div class="qr-left">
+      <div class="qr-box"><svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h35v35H0z"/><path stroke="#000000" d="M1 1.5h7m2 0h3m4 0h4m2 0h2m2 0h7M1 2.5h1m5 0h1m2 0h2m1 0h1m2 0h1m1 0h1m3 0h2m1 0h1m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m3 0h2m1 0h1m2 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h3m4 0h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m1 0h10m1 0h3m2 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h3m10 0h2m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h2m2 0h1m1 0h1m1 0h1m4 0h2m1 0h1M1 9.5h1m1 0h5m2 0h3m1 0h2m1 0h2m2 0h1m1 0h3m1 0h5M1 10.5h1m3 0h1m4 0h5m2 0h2m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1M1 11.5h1m1 0h2m1 0h4m3 0h6m4 0h1m1 0h2m2 0h1m1 0h2M1 12.5h2m3 0h1m5 0h1m1 0h1m3 0h2m2 0h2m2 0h1m2 0h4M1 13.5h1m1 0h6m1 0h1m4 0h3m2 0h2m1 0h1m1 0h2m2 0h2m1 0h2M2 14.5h1m2 0h2m3 0h2m2 0h1m1 0h1m2 0h3m2 0h1m1 0h2m2 0h4M5 15.5h3m2 0h1m1 0h1m1 0h4m1 0h1m2 0h2m2 0h7M1 16.5h1m2 0h2m3 0h3m1 0h1m1 0h2m2 0h1m2 0h1m2 0h3m1 0h3M1 17.5h1m1 0h2m2 0h4m1 0h5m1 0h1m6 0h2m1 0h2m3 0h1M3 18.5h1m2 0h1m5 0h4m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h1M1 19.5h9m2 0h2m1 0h3m1 0h1m1 0h2m2 0h1m2 0h2m1 0h1M1 20.5h3m1 0h2m1 0h1m6 0h3m2 0h5m3 0h4m1 0h1M3 21.5h3m1 0h2m1 0h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h3m1 0h2M1 22.5h2m1 0h1m4 0h1m2 0h6m2 0h2m1 0h2m2 0h2m1 0h2m1 0h1M1 23.5h1m2 0h2m1 0h1m2 0h2m1 0h1m4 0h2m1 0h3m1 0h5m2 0h1M1 24.5h1m1 0h3m5 0h5m1 0h1m1 0h1m2 0h5m1 0h1m1 0h3M1 25.5h1m1 0h2m2 0h1m2 0h2m1 0h2m2 0h2m4 0h1m1 0h5m2 0h1M9 26.5h1m1 0h4m2 0h5m3 0h1m3 0h1m1 0h1m1 0h1M1 27.5h7m2 0h2m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m1 0h1m1 0h1m1 0h2M1 28.5h1m5 0h1m1 0h4m3 0h4m2 0h4m3 0h5M1 29.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h3m2 0h1m4 0h6m1 0h2M1 30.5h1m1 0h3m1 0h1m1 0h2m1 0h1m3 0h1m1 0h4m2 0h3m2 0h5M1 31.5h1m1 0h3m1 0h1m1 0h1m4 0h1m1 0h3m3 0h2m3 0h2m2 0h1M1 32.5h1m5 0h1m2 0h3m1 0h3m3 0h3m1 0h1m1 0h2m1 0h1m1 0h1M1 33.5h7m1 0h2m3 0h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h2m1 0h1m1 0h1"/></svg></div>
+      <div class="qr-label">Frontend QR</div>
+    </div>
+    <div class="qr-right">
+      <h3>QR Kod ile Mesai Takibi</h3>
+      <p>Yönetici <strong>/admin/qr-code</strong> sayfasından QR kodu oluşturur; PNG olarak indirir veya yazdırıp ofis girişine asar. Personel telefon kamerasıyla okuttuğunda mobil optimize sayfa açılır.</p>
+      <div class="qr-steps">
+        <div class="qr-step"><div class="qr-step-n">1</div>Yönetici QR kodunu oluşturur, PNG indirir veya yazdırır.</div>
+        <div class="qr-step"><div class="qr-step-n">2</div>Personel telefon kamerasıyla kodu okuttuğunda uygulama açılır.</div>
+        <div class="qr-step"><div class="qr-step-n">3</div>Oturum açık değilse giriş yapılır; ardından <code style="background:#1e293b;color:#60a5fa;border-radius:3px;padding:0 4px;">/qr</code> sayfasına otomatik dönülür.</div>
+        <div class="qr-step"><div class="qr-step-n">4</div>Mesai durumuna göre uygun buton gösterilir: başlat / molaya çık / moladan dön / bitir.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Mesai Takip Projesi — Frontend</span>
+    <span>Geliştiren: <strong>tolgabayrak</strong></span>
+  </div>
+</div>
+
+<!-- SAYFA 3 — BACKEND -->
+<div class="page page-break">
+  <div class="sh">
+    <div class="sh-icon ic-blue">⚙️</div>
+    <div><h2>Backend</h2><p>Node.js REST API — Railway'de canlı</p></div>
+  </div>
+  <div class="intro-box">
+    <p>Katmanlı mimari (Layered Architecture) ile inşa edilmiştir. JWT kimlik doğrulama, rol bazlı yetkilendirme, Joi şema validasyonu ve rate limiting ile üretim ortamına hazır güvenlik katmanı sunar.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="sh" style="margin-bottom:12px;"><div class="sh-icon ic-purple">🏗️</div><div><h2>Mimari</h2></div></div>
+      <div class="arch-box">
+        <div class="at">Katmanlı Akış</div>
+        <span class="al">Routes</span><span class="aa"> → </span><span class="al">Controller</span><span class="aa"> → </span><span class="al">Service</span><br>
+        <span style="color:#475569;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</span><br>
+        <span class="al">Repository</span><span class="aa"> → </span><span class="al">PostgreSQL</span>
+      </div>
+      <div class="tech-grid" style="margin-bottom:0;">
+        <span class="tag blue">Node.js ESM</span><span class="tag blue">Express 5</span><span class="tag blue">PostgreSQL</span>
+        <span class="tag">jsonwebtoken</span><span class="tag">bcrypt</span><span class="tag">Joi</span>
+        <span class="tag">helmet</span><span class="tag">cors</span><span class="tag">express-rate-limit</span>
+        <span class="tag">morgan</span><span class="tag">cookie-parser</span><span class="tag">dotenv</span>
+      </div>
+    </div>
+    <div>
+      <div class="sh" style="margin-bottom:12px;"><div class="sh-icon ic-orange">🔒</div><div><h2>Güvenlik</h2></div></div>
+      <div class="sec-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="sc"><div class="si">🔐</div><h4>JWT HttpOnly</h4><p>XSS'e karşı korumalı cookie</p></div>
+        <div class="sc"><div class="si">🛡️</div><h4>Rate Limit</h4><p>15 dk'da max 5 login denemesi</p></div>
+        <div class="sc"><div class="si">✅</div><h4>Joi Schema</h4><p>Endpoint'e ulaşmadan doğrulama</p></div>
+        <div class="sc"><div class="si">🔑</div><h4>Bcrypt</h4><p>Hashlenmiş şifre depolama</p></div>
+        <div class="sc"><div class="si">🌐</div><h4>CORS + Helmet</h4><p>HTTP güvenlik başlıkları</p></div>
+        <div class="sc"><div class="si">👮</div><h4>Rol Kontrolü</h4><p>personel / yönetici rolleri</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><div class="sh-icon ic-teal">🔗</div><div><h2>API Endpointleri</h2></div></div>
+  <table>
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Açıklama</th></tr></thead>
+    <tbody>
+      <tr class="tg-sep"><td colspan="3">/api/auth</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/login</td><td>E-posta + şifre ile giriş, JWT döner</td></tr>
+      <tr><td><span class="m get">GET</span></td><td style="font-family:monospace;">/me</td><td>Oturumdaki kullanıcı bilgisi</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/logout</td><td>Oturumu sonlandırır</td></tr>
+      <tr class="tg-sep"><td colspan="3">/api/shift — JWT gerekli</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/start</td><td>Günlük mesayi başlatır</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/break/start</td><td>Molaya çıkar</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/break/end</td><td>Moladan döner, süreyi hesaplar</td></tr>
+      <tr><td><span class="m post">POST</span></td><td style="font-family:monospace;">/end</td><td>Mesayi bitirir</td></tr>
+      <tr><td><span class="m get">GET</span></td><td style="font-family:monospace;">/history</td><td>Bugünkü olaylar ve toplam mola süresi</td></tr>
+      <tr class="tg-sep"><td colspan="3">/api/admin — JWT + yönetici rolü</td></tr>
+      <tr><td><span class="m get">GET</span></td><td style="font-family:monospace;">/employees</td><td>Tüm aktif çalışanları anlık durumlarıyla listeler</td></tr>
+      <tr><td><span class="m get">GET</span></td><td style="font-family:monospace;">/employees/:id</td><td>Belirli çalışanın profil bilgisi</td></tr>
+      <tr><td><span class="m get">GET</span></td><td style="font-family:monospace;">/employees/:id/history</td><td>Çalışanın mesai olay geçmişi</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:52px; border-top:1px dashed #e2e8f0;"></div>
+  <div style="margin-top:20px;"></div>
+  <div class="sh"><div class="sh-icon ic-orange">🗄️</div><div><h2>Veritabanı Şeması</h2><p>PostgreSQL</p></div></div>
+  <div class="db-grid">
+    <div class="db-card">
+      <h4>users</h4>
+      <div class="db-row"><span class="db-col">id</span><span class="db-type">SERIAL PK</span></div>
+      <div class="db-row"><span class="db-col">full_name</span><span class="db-type">VARCHAR(100)</span></div>
+      <div class="db-row"><span class="db-col">email</span><span class="db-type">UNIQUE</span></div>
+      <div class="db-row"><span class="db-col">password_hash</span><span class="db-type">VARCHAR</span></div>
+      <div class="db-row"><span class="db-col">role</span><span class="db-type">user_role</span><span class="db-desc">personel|yonetici</span></div>
+      <div class="db-row"><span class="db-col">is_active</span><span class="db-type">BOOLEAN</span></div>
+    </div>
+    <div class="db-card">
+      <h4>work_sessions</h4>
+      <div class="db-row"><span class="db-col">id</span><span class="db-type">SERIAL PK</span></div>
+      <div class="db-row"><span class="db-col">user_id</span><span class="db-type">FK→users</span></div>
+      <div class="db-row"><span class="db-col">date</span><span class="db-type">DATE</span><span class="db-desc">günde 1 oturum</span></div>
+      <div class="db-row"><span class="db-col">status</span><span class="db-type">emp_status</span></div>
+      <div class="db-row"><span class="db-col">started_at</span><span class="db-type">TIMESTAMPTZ</span></div>
+      <div class="db-row"><span class="db-col">total_break_min</span><span class="db-type">INTEGER</span></div>
+    </div>
+    <div class="db-card">
+      <h4>events</h4>
+      <div class="db-row"><span class="db-col">id</span><span class="db-type">SERIAL PK</span></div>
+      <div class="db-row"><span class="db-col">session_id</span><span class="db-type">FK→sessions</span></div>
+      <div class="db-row"><span class="db-col">user_id</span><span class="db-type">FK→users</span></div>
+      <div class="db-row"><span class="db-col">event_type</span><span class="db-type">event_type</span></div>
+      <div class="db-row"><span class="db-col">occurred_at</span><span class="db-type">TIMESTAMPTZ</span></div>
+      <div class="db-row" style="padding-top:5px;"><span style="font-size:9.5px;color:#94a3b8;">mesai_baslat · mola_baslat · mola_bitis · mesai_bitir</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Mesai Takip Projesi — Backend</span>
+    <span>Geliştiren: <strong>tolgabayrak</strong></span>
+  </div>
+</div>
+
+</body>
+</html>
