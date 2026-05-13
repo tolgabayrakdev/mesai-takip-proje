@@ -23,7 +23,7 @@ app.use(
 app.use(express.static(join(__dirname, "dist")));
 
 // React SPA — tüm route'ları index.html'e yönlendir
-app.get("*", (_req, res) => {
+app.get("/{*path}", (_req, res) => {
   res.sendFile(join(__dirname, "dist", "index.html"));
 });
 
