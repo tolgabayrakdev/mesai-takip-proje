@@ -7,6 +7,12 @@ import { API_URL } from "@/lib/config";
 import { toast } from "sonner";
 import { Clock } from "lucide-react";
 
+const DEMO_USERS = [
+  { label: "Yönetici", email: "admin@sirket.com", password: "admin123" },
+  { label: "Ahmet Yılmaz", email: "ahmet@sirket.com", password: "personel123" },
+  { label: "Ayşe Kaya", email: "ayse@sirket.com", password: "personel123" },
+];
+
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -95,6 +101,24 @@ export default function SignIn() {
             {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </Button>
         </form>
+
+        <div className="space-y-2">
+          <p className="text-muted-foreground text-center text-xs">Demo hesaplar</p>
+          <div className="grid grid-cols-3 gap-2">
+            {DEMO_USERS.map((u) => (
+              <button
+                key={u.email}
+                type="button"
+                onClick={() => { setEmail(u.email); setPassword(u.password); }}
+                className="border-border hover:bg-muted rounded-lg border px-2 py-2 text-left transition-colors"
+              >
+                <p className="text-foreground truncate text-xs font-medium">{u.label}</p>
+                <p className="text-muted-foreground truncate text-[10px]">{u.email}</p>
+                <p className="text-muted-foreground text-[10px]">{u.password}</p>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
