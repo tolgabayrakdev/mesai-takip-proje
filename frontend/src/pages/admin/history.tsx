@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { ArrowLeft, Coffee, CalendarDays, Clock, Play, Square } from "lucide-react";
+import { ArrowLeft, Coffee, CalendarDays, Clock, Play, Square, FileDown, Sheet } from "lucide-react";
 import { API_URL } from "@/lib/config";
+import { exportAdminPdf, exportAdminCsv } from "@/lib/export-admin";
+import type { HistoryEntry } from "@/lib/export-admin";
 
 type Period = "daily" | "weekly" | "monthly";
 type EventType = "mesai_baslat" | "mola_baslat" | "mola_bitis" | "mesai_bitir";
-
-interface HistoryEntry {
-  id: number;
-  event_type: EventType;
-  occurred_at: string;
-  date: string;
-  session_started: string;
-  session_ended: string | null;
-  total_break_minutes: number;
-}
 
 const EVENT_LABELS: Record<EventType, string> = {
   mesai_baslat: "Mesai Başlatıldı",
@@ -126,24 +118,45 @@ export default function AdminHistory() {
         </div>
       </div>
 
-      {/* Periyot seçici */}
-      <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-muted">
-        {PERIODS.map((p) => (
-          <button
-            key={p.key}
-            onClick={() => setPeriod(p.key)}
-            className={`relative rounded-lg py-2.5 text-sm font-medium transition-all ${
-              period === p.key
-                ? "bg-background shadow-sm text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <span className="block">{p.label}</span>
-            <span className={`block text-xs font-normal mt-0.5 ${period === p.key ? "text-muted-foreground" : "text-muted-foreground/60"}`}>
-              {p.desc}
-            </span>
-          </button>
-        ))}
+      {/* Periyot seçici + export butonları */}
+      <div className="space-y-2">
+        <div className="grid grid-cols-3 gap-2 p-1 rounded-xl bg-muted">
+          {PERIODS.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => setPeriod(p.key)}
+              className={`relative rounded-lg py-2.5 text-sm font-medium transition-all ${
+                period === p.key
+                  ? "bg-background shadow-sm text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span className="block">{p.label}</span>
+              <span className={`block text-xs font-normal mt-0.5 ${period === p.key ? "text-muted-foreground" : "text-muted-foreground/60"}`}>
+                {p.desc}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {history.length > 0 && (
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => exportAdminCsv(employeeName, period, history)}
+              className="inline-flex items-center gap-1.5 rounded-lg border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              <Sheet className="h-3.5 w-3.5" />
+              CSV İndir
+            </button>
+            <button
+              onClick={() => exportAdminPdf(employeeName, period, history)}
+              className="inline-flex items-center gap-1.5 rounded-lg border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              <FileDown className="h-3.5 w-3.5" />
+              PDF İndir
+            </button>
+          </div>
+        )}
       </div>
 
       {/* İçerik */}
