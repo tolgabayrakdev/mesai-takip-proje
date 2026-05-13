@@ -8,10 +8,12 @@ export class AuthService {
     this.userRepository = new UserRepository();
   }
 
+  // JWT token'dan gelen kullanıcı ID'siyle oturum açan kullanıcının bilgilerini döner.
   async getMe(id) {
     return this.userRepository.findById(id);
   }
 
+  // E-posta ve şifre ile kullanıcı girişi yapar; doğrulama başarılıysa JWT token ve kullanıcı bilgilerini döner.
   async login(email, password) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new UnauthorizedException('Email veya şifre hatalı');

@@ -8,6 +8,7 @@ export class ShiftService {
     this.eventRepository = new EventRepository();
   }
 
+  // Kullanıcı için bugüne ait yeni bir mesai oturumu başlatır; bugün zaten oturum varsa hata fırlatır.
   async startShift(userId) {
     const existing = await this.sessionRepository.findTodaySession(userId);
     if (existing) throw new HttpException(409, 'Bugün için zaten bir mesai kaydı var');
@@ -17,6 +18,7 @@ export class ShiftService {
     return session;
   }
 
+  // Aktif mesaideki kullanıcıyı molaya alır; mesai yoksa veya zaten moladaysa hata fırlatır.
   async startBreak(userId) {
     const session = await this.sessionRepository.findTodaySession(userId);
     if (!session) throw new HttpException(400, 'Aktif mesai bulunamadı');
@@ -27,6 +29,7 @@ export class ShiftService {
     return updated;
   }
 
+  // Molayı bitirir, geçen mola dakikasını hesaplayıp oturuma ekler ve durumu 'mesaide' yapar.
   async endBreak(userId) {
     const session = await this.sessionRepository.findTodaySession(userId);
     if (!session) throw new HttpException(400, 'Aktif mesai bulunamadı');
@@ -43,6 +46,7 @@ export class ShiftService {
     return updated;
   }
 
+  // Aktif mesaiyi sonlandırır; molada veya mesai zaten bitmişse hata fırlatır.
   async endShift(userId) {
     const session = await this.sessionRepository.findTodaySession(userId);
     if (!session) throw new HttpException(400, 'Aktif mesai bulunamadı');
@@ -55,6 +59,7 @@ export class ShiftService {
     return updated;
   }
 
+  // Kullanıcının bugünkü mesai olaylarını ve toplam mola süresini getirir.
   async getHistory(userId) {
     const events = await this.eventRepository.findTodayEvents(userId);
     const session = await this.sessionRepository.findTodaySession(userId);

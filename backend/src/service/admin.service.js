@@ -9,6 +9,8 @@ export class AdminService {
     this.eventRepository = new EventRepository();
   }
 
+  // Tüm aktif çalışanları bugünkü mesai durumlarıyla birlikte getirir.
+  // Molada olan çalışanlar için anlık mola süresini de hesaplayıp toplam mola dakikasına ekler.
   async getEmployeeList() {
     const users = await this.userRepository.findAllActive();
     const todaySessions = await this.sessionRepository.findAllTodaySessions();
@@ -36,10 +38,12 @@ export class AdminService {
     return result;
   }
 
+  // Belirli bir çalışanın profil bilgilerini ID'ye göre getirir.
   async getEmployee(userId) {
     return this.userRepository.findById(userId);
   }
 
+  // Bir çalışanın mesai olay geçmişini belirtilen periyota göre getirir (varsayılan: günlük).
   async getEmployeeHistory(userId, period = 'daily') {
     return this.eventRepository.findEventsByPeriod(userId, period);
   }
