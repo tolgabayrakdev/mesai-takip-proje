@@ -11,11 +11,12 @@ const BACKEND_URL =
   "https://mesai-takip-proje-production.up.railway.app";
 
 // /api isteklerini backend'e proxy'le — cookie same-origin olarak gider
+// pathFilter kullanıyoruz ki /api prefix'i korunsun (app.use ile mount edilince silinirdi)
 app.use(
-  "/api",
   createProxyMiddleware({
     target: BACKEND_URL,
     changeOrigin: true,
+    pathFilter: "/api",
   })
 );
 
