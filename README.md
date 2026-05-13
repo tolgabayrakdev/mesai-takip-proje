@@ -292,7 +292,20 @@ users (1) ──────────────< events (N)
 ```bash
 # Şemayı oluştur
 psql -U postgres -d mesai_db -f backend/database.sql
+
+# Örnek kullanıcı ve mesai verilerini yükle
+psql -U postgres -d mesai_db -f backend/seed.sql
 ```
+
+### Örnek Kullanıcılar
+
+Seed verisi yüklendikten sonra aşağıdaki hesaplarla giriş yapılabilir:
+
+| Ad Soyad | E-posta | Şifre | Rol |
+|---|---|---|---|
+| Admin Kullanıcı | admin@sirket.com | admin123 | Yönetici |
+| Ahmet Yılmaz | ahmet@sirket.com | personel123 | Personel |
+| Ayşe Kaya | ayse@sirket.com | personel123 | Personel |
 
 ---
 
