@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/lib/config";
 import { toast } from "sonner";
-import { Clock, Coffee, Play, Square, CheckCircle2, LogIn } from "lucide-react";
+import { Clock, Coffee, Play, Square, CheckCircle2 } from "lucide-react";
 
 type ShiftStatus = "mesaiye_baslamadi" | "mesaide" | "molada" | "mesai_bitti";
 type EventType = "mesai_baslat" | "mola_baslat" | "mola_bitis" | "mesai_bitir";
@@ -14,7 +14,6 @@ interface ShiftEvent {
 }
 
 interface User {
-  id: number;
   full_name: string;
   email: string;
   role: "personel" | "yonetici";
@@ -33,68 +32,24 @@ function fmtTime(iso: string) {
 }
 
 const STATUS_META: Record<ShiftStatus, { label: string; color: string; bg: string }> = {
-  mesaiye_baslamadi: {
-    label: "Henüz başlanmadı",
-    color: "text-gray-500",
-    bg: "bg-gray-100 dark:bg-gray-800",
-  },
-  mesaide: {
-    label: "Mesaidesizin",
-    color: "text-green-600 dark:text-green-400",
-    bg: "bg-green-50 dark:bg-green-950/40",
-  },
-  molada: {
-    label: "Moladasınız",
-    color: "text-amber-600 dark:text-amber-400",
-    bg: "bg-amber-50 dark:bg-amber-950/40",
-  },
-  mesai_bitti: {
-    label: "Mesai tamamlandı",
-    color: "text-blue-600 dark:text-blue-400",
-    bg: "bg-blue-50 dark:bg-blue-950/40",
-  },
+  mesaiye_baslamadi: { label: "Henüz başlanmadı", color: "text-gray-500", bg: "bg-gray-100 dark:bg-gray-800" },
+  mesaide:           { label: "Mesaidesizin",     color: "text-green-600 dark:text-green-400", bg: "bg-green-50 dark:bg-green-950/40" },
+  molada:            { label: "Moladasınız",       color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-50 dark:bg-amber-950/40" },
+  mesai_bitti:       { label: "Mesai tamamlandı", color: "text-blue-600 dark:text-blue-400",   bg: "bg-blue-50 dark:bg-blue-950/40" },
 };
 
-const ACTIONS: Partial<
-  Record<ShiftStatus, { endpoint: string; label: string; icon: typeof Play; style: string }[]>
-> = {
-  mesaiye_baslamadi: [
-    {
-      endpoint: "/shift/start",
-      label: "Mesai Başlat",
-      icon: Play,
-      style: "bg-green-600 hover:bg-green-700 text-white",
-    },
-  ],
-  mesaide: [
-    {
-      endpoint: "/shift/break/start",
-      label: "Molaya Çık",
-      icon: Coffee,
-      style: "bg-amber-500 hover:bg-amber-600 text-white",
-    },
-    {
-      endpoint: "/shift/end",
-      label: "Mesai Bitir",
-      icon: Square,
-      style: "bg-red-500 hover:bg-red-600 text-white",
-    },
-  ],
-  molada: [
-    {
-      endpoint: "/shift/break/end",
-      label: "Moladan Dön",
-      icon: Clock,
-      style: "bg-amber-500 hover:bg-amber-600 text-white",
-    },
-  ],
+const ACTIONS: Partial<Record<ShiftStatus, { endpoint: string; label: string; icon: typeof Play; style: string }[]>> = {
+  mesaiye_baslamadi: [{ endpoint: "/shift/start",       label: "Mesai Başlat", icon: Play,   style: "bg-green-600 hover:bg-green-700 text-white" }],
+  mesaide:           [{ endpoint: "/shift/break/start", label: "Molaya Çık",   icon: Coffee, style: "bg-amber-500 hover:bg-amber-600 text-white" },
+                      { endpoint: "/shift/end",         label: "Mesai Bitir",  icon: Square, style: "bg-red-500 hover:bg-red-600 text-white" }],
+  molada:            [{ endpoint: "/shift/break/end",   label: "Moladan Dön",  icon: Clock,  style: "bg-amber-500 hover:bg-amber-600 text-white" }],
 };
 
 const ACTION_SUCCESS: Record<string, string> = {
-  "/shift/start": "Mesai başlatıldı",
+  "/shift/start":       "Mesai başlatıldı",
   "/shift/break/start": "Molaya çıkıldı",
-  "/shift/break/end": "Moladan dönüldü",
-  "/shift/end": "Mesai bitirildi",
+  "/shift/break/end":   "Moladan dönüldü",
+  "/shift/end":         "Mesai bitirildi",
 };
 
 export default function QrScanPage() {
@@ -103,46 +58,30 @@ export default function QrScanPage() {
   const [events, setEvents] = useState<ShiftEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_URL}/auth/me`, { credentials: "include" }).then(async (res) => {
-      if (!res.ok) {
-        navigate("/sign-in?next=/qr", { replace: true });
-        return;
-      }
-      const data: User = await res.json();
-      if (data.role === "yonetici") {
-        navigate("/admin", { replace: true });
-        return;
-      }
-      setUser(data);
-      setAuthChecked(true);
-    });
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!authChecked) return;
-    fetch(`${API_URL}/shift/history`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setEvents(data.events ?? []))
+    fetch(`${API_URL}/auth/me`, { credentials: "include" })
+      .then(async (res) => {
+        if (!res.ok) { navigate("/sign-in?next=/qr", { replace: true }); return; }
+        const data: User = await res.json();
+        if (data.role === "yonetici") { navigate("/admin", { replace: true }); return; }
+        setUser(data);
+        return fetch(`${API_URL}/shift/history`, { credentials: "include" }).then((r) => r.json());
+      })
+      .then((data) => data && setEvents(data.events ?? []))
       .finally(() => setLoading(false));
-  }, [authChecked]);
+  }, [navigate]);
 
   async function handleAction(endpoint: string) {
     setActionLoading(true);
     try {
-      const res = await fetch(`${API_URL}${endpoint}`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const res = await fetch(`${API_URL}${endpoint}`, { method: "POST", credentials: "include" });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || "İşlem başarısız");
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || "İşlem başarısız");
       }
-      const updated = await fetch(`${API_URL}/shift/history`, { credentials: "include" });
-      const data = await updated.json();
-      setEvents(data.events ?? []);
+      const updated = await fetch(`${API_URL}/shift/history`, { credentials: "include" }).then((r) => r.json());
+      setEvents(updated.events ?? []);
       toast.success(ACTION_SUCCESS[endpoint] ?? "İşlem başarılı");
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "İşlem başarısız");
@@ -166,7 +105,6 @@ export default function QrScanPage() {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* Header */}
       <header className="flex items-center justify-between border-b px-5 py-4">
         <div className="flex items-center gap-2.5">
           <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg">
@@ -182,9 +120,7 @@ export default function QrScanPage() {
         </button>
       </header>
 
-      {/* İçerik */}
       <main className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-8 px-6 py-10">
-        {/* Kullanıcı */}
         <div className="text-center">
           <div className="bg-muted text-muted-foreground mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold">
             {user.full_name.charAt(0).toUpperCase()}
@@ -193,22 +129,17 @@ export default function QrScanPage() {
           <p className="text-muted-foreground text-sm">{user.email}</p>
         </div>
 
-        {/* Durum */}
         <div className={`w-full rounded-2xl p-5 text-center ${meta.bg}`}>
           <p className={`text-lg font-semibold ${meta.color}`}>{meta.label}</p>
           {startEvent && (
-            <p className="text-muted-foreground mt-1 text-sm">
-              Giriş: {fmtTime(startEvent.occurred_at)}
-            </p>
+            <p className="text-muted-foreground mt-1 text-sm">Giriş: {fmtTime(startEvent.occurred_at)}</p>
           )}
         </div>
 
-        {/* Aksiyonlar */}
         {status === "mesai_bitti" ? (
           <div className="flex flex-col items-center gap-2 text-center">
             <CheckCircle2 className="h-10 w-10 text-blue-500" />
             <p className="text-sm font-medium">Bugünkü mesainiz tamamlandı.</p>
-            <p className="text-muted-foreground text-xs">Yarın görüşmek üzere!</p>
           </div>
         ) : (
           <div className="flex w-full flex-col gap-3">
@@ -228,42 +159,11 @@ export default function QrScanPage() {
             })}
           </div>
         )}
-
-        {/* Giriş yapılmamışsa gösterilecek uyarı (logout sonrası) */}
-        {status === "mesaiye_baslamadi" && (
-          <p className="text-muted-foreground text-center text-xs">
-            Mesai işlemi yapmak için butona basın.
-          </p>
-        )}
       </main>
 
       <footer className="py-4 text-center">
         <p className="text-muted-foreground text-xs">YebSoft Mesai Takip</p>
       </footer>
-    </div>
-  );
-}
-
-export function QrLoginPrompt() {
-  const navigate = useNavigate();
-  return (
-    <div className="bg-background flex min-h-screen flex-col items-center justify-center gap-6 px-6">
-      <div className="bg-primary text-primary-foreground flex h-14 w-14 items-center justify-center rounded-2xl">
-        <Clock className="h-7 w-7" />
-      </div>
-      <div className="text-center">
-        <h1 className="text-xl font-bold">Giriş Yapmanız Gerekiyor</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          QR işlem sayfasına erişmek için lütfen giriş yapın.
-        </p>
-      </div>
-      <button
-        onClick={() => navigate("/sign-in?next=/qr")}
-        className="bg-primary text-primary-foreground flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
-      >
-        <LogIn className="h-4 w-4" />
-        Giriş Yap
-      </button>
     </div>
   );
 }

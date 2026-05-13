@@ -18,13 +18,6 @@ const EVENT_LABELS: Record<EventType, string> = {
   mesai_bitir: "Mesai Bitirildi",
 };
 
-const EVENT_COLOR: Record<EventType, string> = {
-  mesai_baslat: "#16a34a",
-  mola_baslat: "#d97706",
-  mola_bitis: "#d97706",
-  mesai_bitir: "#2563eb",
-};
-
 const PERIOD_LABELS: Record<Period, string> = {
   daily: "Günlük",
   weekly: "Haftalık",
@@ -45,16 +38,9 @@ function fmtDate(dateStr: string) {
   });
 }
 
-function fmtDateShort(dateStr: string) {
-  return new Date(dateStr + "T12:00:00").toLocaleDateString("tr-TR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
-
+// Mesai başı ve sonu arasındaki net çalışma süresini "Xs Ydk" formatında döner.
 function calcNet(started: string, ended: string | null, breakMin: number): string {
-  if (!ended) return "Devam ediyor";
+  if (!ended) return "—";
   const mins =
     Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
   if (mins <= 0) return "—";
@@ -63,13 +49,7 @@ function calcNet(started: string, ended: string | null, breakMin: number): strin
   return h > 0 ? `${h}s ${m}dk` : `${m}dk`;
 }
 
-function calcNetMinutes(started: string, ended: string | null, breakMin: number): number | null {
-  if (!ended) return null;
-  const mins =
-    Math.round((new Date(ended).getTime() - new Date(started).getTime()) / 60_000) - breakMin;
-  return mins > 0 ? mins : null;
-}
-
+// Gün bazlı gruplama: { "2024-05-13": [entry, entry, ...] }
 function groupByDay(entries: HistoryEntry[]): [string, HistoryEntry[]][] {
   const map = new Map<string, HistoryEntry[]>();
   for (const e of entries) {
@@ -84,72 +64,63 @@ function groupByDay(entries: HistoryEntry[]): [string, HistoryEntry[]][] {
 
 export function exportAdminPdf(employeeName: string, period: Period, entries: HistoryEntry[]) {
   const days = groupByDay(entries);
-  const today = new Date().toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const today = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+
+  const EVENT_COLOR: Record<EventType, string> = {
+    mesai_baslat: "#16a34a",
+    mola_baslat: "#d97706",
+    mola_bitis: "#d97706",
+    mesai_bitir: "#2563eb",
+  };
 
   const dayBlocks = days
     .map(([day, dayEntries]) => {
       const first = dayEntries[0];
       const net = calcNet(first.session_started, first.session_ended, first.total_break_minutes);
-
       const eventRows = dayEntries
         .map(
           (e) => `
-      <tr>
-        <td>
-          <span class="dot" style="background:${EVENT_COLOR[e.event_type]}"></span>
-          ${EVENT_LABELS[e.event_type]}
-        </td>
-        <td class="time">${fmtTime(e.occurred_at)}</td>
-      </tr>`
+          <tr>
+            <td><span class="dot" style="background:${EVENT_COLOR[e.event_type]}"></span>${EVENT_LABELS[e.event_type]}</td>
+            <td class="time">${fmtTime(e.occurred_at)}</td>
+          </tr>`
         )
         .join("");
 
       return `
-    <div class="day-block">
-      <div class="day-header">
-        <div>
-          <div class="day-title">${fmtDate(day)}</div>
-          <div class="day-sub">${fmtTime(first.session_started)} — ${fmtTime(first.session_ended)}</div>
+      <div class="day-block">
+        <div class="day-header">
+          <div>
+            <div class="day-title">${fmtDate(day)}</div>
+            <div class="day-sub">${fmtTime(first.session_started)} — ${fmtTime(first.session_ended)}</div>
+          </div>
+          <div class="day-badges">
+            ${first.session_ended ? `<span class="badge green">${net} çalışma</span>` : ""}
+            ${first.total_break_minutes > 0 ? `<span class="badge amber">${first.total_break_minutes} dk mola</span>` : `<span class="badge gray">Mola yok</span>`}
+          </div>
         </div>
-        <div class="day-badges">
-          ${first.session_ended ? `<span class="badge green">${net} çalışma</span>` : ""}
-          ${
-            first.total_break_minutes > 0
-              ? `<span class="badge amber">${first.total_break_minutes} dk mola</span>`
-              : `<span class="badge gray">Mola yok</span>`
-          }
-        </div>
-      </div>
-      <table>
-        <thead><tr><th>Hareket</th><th>Saat</th></tr></thead>
-        <tbody>${eventRows}</tbody>
-      </table>
-    </div>`;
+        <table>
+          <thead><tr><th>Hareket</th><th>Saat</th></tr></thead>
+          <tbody>${eventRows}</tbody>
+        </table>
+      </div>`;
     })
     .join("");
 
-  // Özet istatistikler
+  const totalBreakMins = days.reduce((sum, [, de]) => sum + de[0].total_break_minutes, 0);
   const completedDays = days.filter(([, de]) => de[0].session_ended !== null);
   const totalNetMins = completedDays.reduce((sum, [, de]) => {
-    const mins = calcNetMinutes(
-      de[0].session_started,
-      de[0].session_ended,
-      de[0].total_break_minutes
-    );
-    return sum + (mins ?? 0);
+    const first = de[0];
+    const mins =
+      Math.round(
+        (new Date(first.session_ended!).getTime() - new Date(first.session_started).getTime()) /
+          60_000
+      ) - first.total_break_minutes;
+    return sum + Math.max(mins, 0);
   }, 0);
-  const totalBreakMins = days.reduce((sum, [, de]) => sum + de[0].total_break_minutes, 0);
   const avgNetMins = completedDays.length > 0 ? Math.round(totalNetMins / completedDays.length) : 0;
 
-  function minsToStr(m: number) {
-    const h = Math.floor(m / 60);
-    const min = m % 60;
-    return h > 0 ? `${h}s ${min}dk` : `${min}dk`;
-  }
+  const minsToStr = (m: number) => (m >= 60 ? `${Math.floor(m / 60)}s ${m % 60}dk` : `${m}dk`);
 
   const html = `<!DOCTYPE html>
 <html lang="tr">
@@ -205,7 +176,7 @@ export function exportAdminPdf(employeeName: string, period: Period, entries: Hi
     <div class="s-item"><div class="lbl">Toplam Gün</div><div class="val">${days.length}</div></div>
     <div class="s-item"><div class="lbl">Toplam Net Çalışma</div><div class="val">${minsToStr(totalNetMins)}</div></div>
     <div class="s-item"><div class="lbl">Toplam Mola</div><div class="val">${minsToStr(totalBreakMins)}</div></div>
-    <div class="s-item"><div class="lbl">Günlük Ort. Çalışma</div><div class="val">${minsToStr(avgNetMins)}</div></div>
+    <div class="s-item"><div class="lbl">Günlük Ort.</div><div class="val">${minsToStr(avgNetMins)}</div></div>
   </div>
 
   <h2>Günlük Detay</h2>
@@ -227,62 +198,40 @@ export function exportAdminPdf(employeeName: string, period: Period, entries: Hi
 export function exportAdminCsv(employeeName: string, period: Period, entries: HistoryEntry[]) {
   const days = groupByDay(entries);
 
-  const headers = [
-    "Tarih",
-    "Gün",
-    "Giriş Saati",
-    "Çıkış Saati",
-    "Toplam Mola (dk)",
-    "Net Çalışma (dk)",
-    "Net Çalışma",
-    "Hareketler",
-  ];
+  const headers = ["Tarih", "Giriş", "Çıkış", "Mola (dk)", "Net Çalışma", "Hareketler"];
 
   const rows = days.map(([day, dayEntries]) => {
     const first = dayEntries[0];
-    const netMins = calcNetMinutes(
-      first.session_started,
-      first.session_ended,
-      first.total_break_minutes
-    );
-    const dayName = new Date(day + "T12:00:00").toLocaleDateString("tr-TR", { weekday: "long" });
     const eventLog = dayEntries
       .map((e) => `${EVENT_LABELS[e.event_type]} (${fmtTime(e.occurred_at)})`)
       .join(" | ");
 
     return [
-      fmtDateShort(day),
-      dayName,
+      fmtDate(day),
       fmtTime(first.session_started),
       fmtTime(first.session_ended),
       first.total_break_minutes.toString(),
-      netMins !== null ? netMins.toString() : "",
-      netMins !== null
-        ? calcNet(first.session_started, first.session_ended, first.total_break_minutes)
-        : "Devam ediyor",
+      calcNet(first.session_started, first.session_ended, first.total_break_minutes),
       eventLog,
     ];
   });
 
-  const escape = (val: string) => `"${val.replace(/"/g, '""')}"`;
-  const csvLines = [
-    // Başlık satırı: personel adı ve periyot bilgisi
-    escape(`Personel: ${employeeName}`),
-    escape(`Periyot: ${PERIOD_LABELS[period]}`),
-    escape(`Oluşturulma: ${new Date().toLocaleDateString("tr-TR")}`),
+  const q = (val: string) => `"${val.replace(/"/g, '""')}"`;
+
+  const lines = [
+    q(`Personel: ${employeeName}`),
+    q(`Periyot: ${PERIOD_LABELS[period]}`),
     "",
-    headers.map(escape).join(","),
-    ...rows.map((r) => r.map(escape).join(",")),
+    headers.map(q).join(","),
+    ...rows.map((r) => r.map(q).join(",")),
   ];
 
-  // BOM ekle → Excel'de Türkçe karakterler düzgün görünsün
-  const blob = new Blob(["﻿" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  // BOM: Excel'de Türkçe karakterler düzgün görünsün
+  const blob = new Blob(["﻿" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `mesai_${employeeName.replace(/\s+/g, "_")}_${period}_${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
+  a.download = `mesai_${employeeName.replace(/\s+/g, "_")}_${period}.csv`;
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
